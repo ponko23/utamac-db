@@ -11,7 +11,7 @@ export const PlateList = (props: PlateListProps) => {
   const plates = useRecoilValue(pagedPlateState);
 
   return (
-    <ul style={{ paddingLeft: 0 }}>
+    <ul style={{ marginTop: 94, padding: 0 }}>
       {plates.map((p) => (
         <li key={p.Id} style={{ listStyle: "none", float: "left", margin: 2 }}>
           <PlateCard plate={p} />

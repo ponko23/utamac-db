@@ -43,10 +43,10 @@ export const PlateCard = (props: PlateCardProps) => {
       <img
         src={released ? plate.ReleasedImage : plate.InitialImage}
         alt={plate.Name}
-        style={{ width: "50%", float: "left" }}
+        style={{ width: "60%", float: "left" }}
         onClick={onChangeRality}
       />
-      <div style={{ float: "left", width: "50%" }}>
+      <div style={{ float: "left", width: "40%" }}>
         <ul
           style={{
             listStyle: "none",

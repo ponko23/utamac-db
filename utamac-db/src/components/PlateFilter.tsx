@@ -38,7 +38,11 @@ export const PlateFilter = (props: PlateFilterProps) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        margin: 2,
+      }}
+    >
       <div>
         レアリティ:
         {filter.useRality.map((r, i) => (

@@ -57,7 +57,11 @@ export const PlatePagination = (props: PlatePaginationProps) => {
   const jumpPages = getJumpPages();
 
   return (
-    <div style={{ clear: "left" }}>
+    <div
+      style={{
+        margin: 2,
+      }}
+    >
       表示:
       {jumpPages.slice(0, 3).map((b) => (
         <button key={"jump" + b} onClick={(e) => iumpToPage(b)}>
