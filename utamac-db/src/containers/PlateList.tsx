@@ -3,7 +3,11 @@ import { useRecoilValue } from "recoil";
 import { pagedPlateState } from "../atoms/plate";
 import { PlateCard } from "../components/PlateCard";
 
-export const PlateList = () => {
+type PlateListProps = {
+  children?: React.ReactNode;
+};
+
+export const PlateList = (props: PlateListProps) => {
   const plates = useRecoilValue(pagedPlateState);
 
   return (

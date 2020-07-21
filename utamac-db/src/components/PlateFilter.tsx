@@ -2,7 +2,11 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import { plateFilterState } from "../atoms/plate";
 
-export const PlateFilter = () => {
+type PlateFilterProps = {
+  children?: React.ReactNode;
+};
+
+export const PlateFilter = (props: PlateFilterProps) => {
   const [filter, setFilter] = useRecoilState(plateFilterState);
 
   const onChangeUseRality = (i: number) => {

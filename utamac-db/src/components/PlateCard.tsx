@@ -3,6 +3,7 @@ import { Plate } from "../atoms/plate";
 
 export type PlateCardProps = {
   plate: Plate;
+  children?: React.ReactNode;
 };
 
 export const PlateCard = (props: PlateCardProps) => {

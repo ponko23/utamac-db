@@ -2,15 +2,15 @@ import React from "react";
 import { RecoilRoot } from "recoil";
 import { PlateList } from "./containers/PlateList";
 import { PlateFilter } from "./components/PlateFilter";
-import { PlatePaging } from "./components/PlatePaging";
+import { PlatePagination } from "./components/PlatePagination";
 
 function App() {
   return (
     <RecoilRoot>
       <PlateFilter />
-      <PlatePaging />
+      <PlatePagination />
       <PlateList />
-      <PlatePaging />
+      <PlatePagination />
     </RecoilRoot>
   );
 }
