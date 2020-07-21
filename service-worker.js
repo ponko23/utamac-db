@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/game-db/utamac-db/precache-manifest.e49825ce258e345e69283e4de9996d81.js"
+  "/game-db/utamac-db/precache-manifest.b0882eecef01c924a1708ca23e816516.js"
 );
 
 self.addEventListener('message', (event) => {
