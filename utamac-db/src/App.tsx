@@ -3,11 +3,22 @@ import { RecoilRoot } from "recoil";
 import { PlateList } from "./containers/PlateList";
 import { PlateFilter } from "./components/PlateFilter";
 import { PlatePagination } from "./components/PlatePagination";
+import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
+import { favsState } from "./atoms/plate";
+
+function PersistenceObserver() {
+  useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
+    var favs = snapshot.getLoadable(favsState).contents;
+    localStorage.setItem("favsPlate", JSON.stringify(favs));
+  });
+  return null;
+}
 
 function App() {
   document.title = "歌マクロスDB";
   return (
     <RecoilRoot>
+      <PersistenceObserver />
       <h3
         style={{
           position: "fixed",

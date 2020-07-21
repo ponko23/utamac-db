@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Plate } from "../atoms/plate";
+import { Plate, favsState } from "../atoms/plate";
+import { useRecoilState } from "recoil";
 
 export type PlateCardProps = {
   plate: Plate;
@@ -8,11 +9,11 @@ export type PlateCardProps = {
 
 export const PlateCard = (props: PlateCardProps) => {
   var plate = props.plate;
-  const [released, SetReleased] = useState(false);
-
+  const [released, setReleased] = useState(false);
+  const [favs, setFavs] = useRecoilState(favsState);
   const onChangeRality = () => {
     if (plate.InitialRarity === plate.MaxRarity) return;
-    SetReleased(!released);
+    setReleased(!released);
   };
 
   const getPlateColor = (a: string) => {
@@ -29,6 +30,18 @@ export const PlateCard = (props: PlateCardProps) => {
   };
 
   const onOpenDetail = (plate: Plate) => {};
+  const onFavChange = (id: number) => {
+    var index = favs.indexOf(id);
+    if (index === -1) {
+      setFavs((f) => {
+        return [...f, id].sort();
+      });
+    } else {
+      setFavs((f) => {
+        return f.filter((p) => p !== id).sort();
+      });
+    }
+  };
 
   return (
     <div
@@ -41,7 +54,12 @@ export const PlateCard = (props: PlateCardProps) => {
         background: getPlateColor(plate.Attribute),
       }}
     >
-      <h4 style={{ margin: 0 }}>{plate.Name}</h4>
+      <div style={{ clear: "left" }}>
+        <h4 style={{ width: "95%", margin: 0, float: "left" }}>{plate.Name}</h4>
+        <span style={{ float: "left" }} onClick={() => onFavChange(plate.Id)}>
+          {favs.indexOf(plate.Id) !== -1 ? "★" : "☆"}
+        </span>
+      </div>
       <img
         src={released ? plate.ReleasedImage : plate.InitialImage}
         alt={plate.Name}

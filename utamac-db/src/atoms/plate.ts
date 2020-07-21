@@ -1,6 +1,14 @@
 import { atom, selector } from "recoil";
 import plateList from "../resources/plateList.json";
 
+const initialFavs: number[] = JSON.parse(
+  localStorage.getItem("favsPlate") ?? "[]"
+);
+export const favsState = atom({
+  key: "favsPlate",
+  default: initialFavs,
+});
+
 export interface Plate {
   Id: number;
   Url: string;
@@ -49,25 +57,25 @@ export const plateState = atom({
   default: initialPlates,
 });
 
-export type RalityType = {
+export type RalityFilter = {
   rality: number;
   use: boolean;
 };
 
-export type PlateType = {
+export type AttributeFilter = {
   type: string;
   use: boolean;
 };
 
-export type ExpectedValue = {
+export type ExpectedValueFilter = {
   name: string;
   has: boolean | null; // has expected value? yes:true / no:false / both:null
 };
 
 export interface PlateFilter {
-  useRality: RalityType[];
-  useType: PlateType[];
-  hasExpected: ExpectedValue[];
+  useRality: RalityFilter[];
+  useAttribute: AttributeFilter[];
+  hasExpected: ExpectedValueFilter[];
 }
 
 const initialPlateFilter: PlateFilter = {
@@ -79,7 +87,7 @@ const initialPlateFilter: PlateFilter = {
     { rality: 2, use: true },
     { rality: 1, use: true },
   ],
-  useType: [
+  useAttribute: [
     { type: "star", use: true },
     { type: "love", use: true },
     { type: "life", use: true },
@@ -103,14 +111,18 @@ export const filteredPlateState = selector({
   get: ({ get }) => {
     const filter = get(plateFilterState);
     const list = get(plateState);
-    return list
-      .filter(
-        (item) =>
-          filter.useRality.find((f) => f.rality === item.InitialRarity)?.use
-      )
-      .filter(
-        (item) => filter.useType.find((f) => f.type === item.Attribute)?.use
-      );
+    //const favs = get(favsState);
+    var usedRality = list.filter(
+      (item) =>
+        filter.useRality.find((f) => f.rality === item.InitialRarity)?.use
+    );
+    var usedAttribute = usedRality.filter(
+      (item) => filter.useAttribute.find((f) => f.type === item.Attribute)?.use
+    );
+    // TODO : お気に入りを使ってフィルタリングするかどうかを指定するフィルタリング項目を画面とfavsStateに追加する（でもlocalstorageに保存するのは配列のみにしたい）
+    //var usedFavs = usedType.filter((item) => favs.find((f) => f === item.Id));
+    //return usedFavs;
+    return usedAttribute;
   },
 });
 

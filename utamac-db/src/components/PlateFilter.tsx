@@ -25,13 +25,13 @@ export const PlateFilter = (props: PlateFilterProps) => {
 
   const onChangeUseType = (i: number) => {
     setFilter((f) => {
-      var newValue = !f.useType[i].use;
+      var newValue = !f.useAttribute[i].use;
       return {
         ...f,
-        useType: [
-          ...f.useType.slice(0, i),
-          { ...f.useType[i], use: newValue },
-          ...f.useType.slice(i + 1),
+        useAttribute: [
+          ...f.useAttribute.slice(0, i),
+          { ...f.useAttribute[i], use: newValue },
+          ...f.useAttribute.slice(i + 1),
         ],
       };
     });
@@ -58,7 +58,7 @@ export const PlateFilter = (props: PlateFilterProps) => {
       </div>
       <div>
         属性:
-        {filter.useType.map((t, i) => (
+        {filter.useAttribute.map((t, i) => (
           <label key={"useType" + i}>
             <input
               type="checkbox"
