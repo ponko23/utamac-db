@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "utamac-db"
+    },
+    {
+      "path": "utamac-scraper"
+    }
+	],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.encoding": "utf8"
+  }
+}

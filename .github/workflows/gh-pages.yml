@@ -1,0 +1,43 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: actions/checkout@v2
+
+      - id: yarn-cache-dir
+        run: echo "::set-output name=value::$(yarn cache dir)"
+      - id: restore-keys
+        run: echo "::set-output name=value::node-dependencies-${{ matrix.node-version }}-v1"
+      - uses: actions/cache@v1
+        id: node-dependencies
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.value }}
+          key: ${{ steps.restore-keys.outputs.value }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ steps.restore-keys.outputs.value }}
+
+      - run: cd utamac-db
+      - run: yarn
+
+      - run: yarn build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
