@@ -27,7 +27,7 @@ export const PlatePagination = (props: PlatePaginationProps) => {
     });
   };
 
-  const iumpToPage = (i: number) => {
+  const jumpToPage = (i: number) => {
     setPaging((p) => {
       return { ...p, current: i };
     });
@@ -64,21 +64,44 @@ export const PlatePagination = (props: PlatePaginationProps) => {
     >
       表示:
       {jumpPages.slice(0, 3).map((b) => (
-        <button key={"jump" + b} onClick={(e) => iumpToPage(b)}>
+        <button
+          key={"jump" + b}
+          onClick={(e) => jumpToPage(b)}
+          disabled={paging.current === b}
+        >
           {b}
         </button>
       ))}
       ...
+      <button
+        onClick={() => jumpToPage(paging.current - 1)}
+        disabled={paging.current === 1}
+      >
+        ◀
+      </button>
       <input
         type="number"
         value={paging.current}
         onChange={onChangeCurrentPage}
         min={1}
         max={pages}
+        style={{
+          width: "2em",
+        }}
       />
+      <button
+        onClick={() => jumpToPage(paging.current + 1)}
+        disabled={paging.current === paging.pages}
+      >
+        ▶
+      </button>
       ...
       {jumpPages.slice(3, 6).map((b) => (
-        <button key={"jump" + b} onClick={(e) => iumpToPage(b)}>
+        <button
+          key={"jump" + b}
+          onClick={(e) => jumpToPage(b)}
+          disabled={paging.current === b}
+        >
           {b}
         </button>
       ))}

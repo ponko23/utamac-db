@@ -28,6 +28,8 @@ export const PlateCard = (props: PlateCardProps) => {
     }
   };
 
+  const onOpenDetail = (plate: Plate) => {};
+
   return (
     <div
       style={{
@@ -85,7 +87,11 @@ export const PlateCard = (props: PlateCardProps) => {
           <li>{plate.ActiveSkill}</li>
           <li>{plate.LiveSkill}</li>
         </ul>
-        <div style={{ clear: "left" }}></div>
+        <div style={{ clear: "left" }}>
+          <button onClick={() => onOpenDetail(plate)} style={{ width: "100%" }}>
+            Detail
+          </button>
+        </div>
       </div>
     </div>
   );
