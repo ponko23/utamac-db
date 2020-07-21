@@ -31,9 +31,13 @@ jobs:
           key: ${{ steps.restore-keys.outputs.value }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ steps.restore-keys.outputs.value }}
 
-      - run: cd utamac-db && yarn
-
-      - run: cd utamac-db && build
+      - name: Dependencies
+        - run: yarn
+        - working-directory: ./utamac-db
+      
+      - name: Build
+      - run: yarn build
+        - working-directory: ./utamac-db
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
