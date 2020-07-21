@@ -32,12 +32,12 @@ jobs:
           restore-keys: ${{ steps.restore-keys.outputs.value }}
 
       - name: Dependencies
-        - run: yarn
-        - working-directory: ./utamac-db
-      
+        run: yarn
+        working-directory: ./utamac-db
+
       - name: Build
-      - run: yarn build
-        - working-directory: ./utamac-db
+        run: yarn build
+        working-directory: ./utamac-db
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
