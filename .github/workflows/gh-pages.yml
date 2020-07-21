@@ -34,7 +34,6 @@ jobs:
       - run: cd utamac-db
       - run: yarn
 
-      - run: cd utamac-db
       - run: yarn build
 
       - name: Deploy
