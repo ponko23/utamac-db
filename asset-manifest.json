@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/game-db/utamac-db/static/js/main.318da80c.chunk.js",
-    "main.js.map": "/game-db/utamac-db/static/js/main.318da80c.chunk.js.map",
-    "runtime-main.js": "/game-db/utamac-db/static/js/runtime-main.e9e9982b.js",
-    "runtime-main.js.map": "/game-db/utamac-db/static/js/runtime-main.e9e9982b.js.map",
-    "static/js/2.d82a0bbb.chunk.js": "/game-db/utamac-db/static/js/2.d82a0bbb.chunk.js",
-    "static/js/2.d82a0bbb.chunk.js.map": "/game-db/utamac-db/static/js/2.d82a0bbb.chunk.js.map",
-    "index.html": "/game-db/utamac-db/index.html",
-    "precache-manifest.b0882eecef01c924a1708ca23e816516.js": "/game-db/utamac-db/precache-manifest.b0882eecef01c924a1708ca23e816516.js",
-    "service-worker.js": "/game-db/utamac-db/service-worker.js",
-    "static/js/2.d82a0bbb.chunk.js.LICENSE.txt": "/game-db/utamac-db/static/js/2.d82a0bbb.chunk.js.LICENSE.txt"
+    "main.js": "/game-db/static/js/main.19a1e162.chunk.js",
+    "main.js.map": "/game-db/static/js/main.19a1e162.chunk.js.map",
+    "runtime-main.js": "/game-db/static/js/runtime-main.7e131307.js",
+    "runtime-main.js.map": "/game-db/static/js/runtime-main.7e131307.js.map",
+    "static/js/2.d82a0bbb.chunk.js": "/game-db/static/js/2.d82a0bbb.chunk.js",
+    "static/js/2.d82a0bbb.chunk.js.map": "/game-db/static/js/2.d82a0bbb.chunk.js.map",
+    "index.html": "/game-db/index.html",
+    "precache-manifest.b5e24bfc5611c873c76be3c806e19234.js": "/game-db/precache-manifest.b5e24bfc5611c873c76be3c806e19234.js",
+    "service-worker.js": "/game-db/service-worker.js",
+    "static/js/2.d82a0bbb.chunk.js.LICENSE.txt": "/game-db/static/js/2.d82a0bbb.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.e9e9982b.js",
+    "static/js/runtime-main.7e131307.js",
     "static/js/2.d82a0bbb.chunk.js",
-    "static/js/main.318da80c.chunk.js"
+    "static/js/main.19a1e162.chunk.js"
   ]
 }
