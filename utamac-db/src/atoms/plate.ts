@@ -1,9 +1,14 @@
 import { atom, selector } from "recoil";
 import plateList from "../resources/plateList.json";
 
-const initialFavs: number[] = JSON.parse(
-  localStorage.getItem("favsPlate") ?? "[]"
-);
+let initialFavs: number[];
+var json = localStorage.getItem("favsPlate");
+if (json !== null) {
+  initialFavs = JSON.parse(json);
+} else {
+  initialFavs = [];
+}
+
 export const favsState = atom({
   key: "favsPlate",
   default: initialFavs,
@@ -79,29 +84,35 @@ export interface PlateFilter {
   hasExpected: ExpectedValueFilter[];
 }
 
-const initialPlateFilter: PlateFilter = {
-  useRality: [
-    { rality: 6, use: true },
-    { rality: 5, use: true },
-    { rality: 4, use: true },
-    { rality: 3, use: true },
-    { rality: 2, use: true },
-    { rality: 1, use: true },
-  ],
-  useAttribute: [
-    { type: "star", use: true },
-    { type: "love", use: true },
-    { type: "life", use: true },
-  ],
-  useLiveSkill: "",
-  hasExpected: [
-    { name: "Life", has: null },
-    { name: "Score", has: null },
-    { name: "Item", has: null },
-    { name: "ForldWave", has: null },
-    { name: "Attack", has: null },
-  ],
-};
+let initialPlateFilter: PlateFilter;
+var filterJjson = localStorage.getItem("filter");
+if (filterJjson !== null) {
+  initialPlateFilter = JSON.parse(filterJjson);
+} else {
+  initialPlateFilter = {
+    useRality: [
+      { rality: 6, use: true },
+      { rality: 5, use: true },
+      { rality: 4, use: true },
+      { rality: 3, use: true },
+      { rality: 2, use: true },
+      { rality: 1, use: true },
+    ],
+    useAttribute: [
+      { type: "star", use: true },
+      { type: "love", use: true },
+      { type: "life", use: true },
+    ],
+    useLiveSkill: "",
+    hasExpected: [
+      { name: "Life", has: null },
+      { name: "Score", has: null },
+      { name: "Item", has: null },
+      { name: "ForldWave", has: null },
+      { name: "Attack", has: null },
+    ],
+  };
+}
 
 export const plateFilterState = atom({
   key: "filter",

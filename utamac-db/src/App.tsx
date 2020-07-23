@@ -4,12 +4,16 @@ import { PlateList } from "./containers/PlateList";
 import { PlateFilter } from "./components/PlateFilter";
 import { PlatePagination } from "./components/PlatePagination";
 import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
-import { favsState } from "./atoms/plate";
+import { favsState, plateFilterState } from "./atoms/plate";
 
 function PersistenceObserver() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
+    // TODO : どのatomが更新されたかわからないので、毎回全部保存してるのでどうにかしたい
     var favs = snapshot.getLoadable(favsState).contents;
-    localStorage.setItem("favsPlate", JSON.stringify(favs));
+    localStorage.setItem(favsState.key, JSON.stringify(favs));
+
+    var filter = snapshot.getLoadable(plateFilterState).contents;
+    localStorage.setItem(plateFilterState.key, JSON.stringify(filter));
   });
   return null;
 }

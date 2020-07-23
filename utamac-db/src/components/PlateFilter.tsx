@@ -82,8 +82,10 @@ export const PlateFilter = (props: PlateFilterProps) => {
           onChange={(e) => onChangeUseLiveSkill(e.currentTarget.value)}
         >
           <option value={""}></option>
-          {liveSkillList.map((l) => (
-            <option value={l}>{l}</option>
+          {liveSkillList.map((l, i) => (
+            <option key={"skill" + i} value={l}>
+              {l}
+            </option>
           ))}
         </select>
       </div>
