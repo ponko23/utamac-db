@@ -1,6 +1,6 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { plateFilterState } from "../atoms/plate";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { plateFilterState, liveSkillListState } from "../atoms/plate";
 
 type PlateFilterProps = {
   children?: React.ReactNode;
@@ -8,7 +8,7 @@ type PlateFilterProps = {
 
 export const PlateFilter = (props: PlateFilterProps) => {
   const [filter, setFilter] = useRecoilState(plateFilterState);
-
+  const liveSkillList = useRecoilValue(liveSkillListState);
   const onChangeUseRality = (i: number) => {
     setFilter((f) => {
       var newValue = !f.useRality[i].use;
@@ -34,6 +34,12 @@ export const PlateFilter = (props: PlateFilterProps) => {
           ...f.useAttribute.slice(i + 1),
         ],
       };
+    });
+  };
+
+  const onChangeUseLiveSkill = (skill: string) => {
+    setFilter((f) => {
+      return { ...f, useLiveSkill: skill };
     });
   };
 
@@ -68,6 +74,18 @@ export const PlateFilter = (props: PlateFilterProps) => {
             {t.type}
           </label>
         ))}
+      </div>
+      <div>
+        ライブスキル:
+        <select
+          value={filter.useLiveSkill}
+          onChange={(e) => onChangeUseLiveSkill(e.currentTarget.value)}
+        >
+          <option value={""}></option>
+          {liveSkillList.map((l) => (
+            <option value={l}>{l}</option>
+          ))}
+        </select>
       </div>
     </div>
   );

@@ -75,6 +75,7 @@ export type ExpectedValueFilter = {
 export interface PlateFilter {
   useRality: RalityFilter[];
   useAttribute: AttributeFilter[];
+  useLiveSkill: string;
   hasExpected: ExpectedValueFilter[];
 }
 
@@ -92,6 +93,7 @@ const initialPlateFilter: PlateFilter = {
     { type: "love", use: true },
     { type: "life", use: true },
   ],
+  useLiveSkill: "",
   hasExpected: [
     { name: "Life", has: null },
     { name: "Score", has: null },
@@ -104,6 +106,14 @@ const initialPlateFilter: PlateFilter = {
 export const plateFilterState = atom({
   key: "filter",
   default: initialPlateFilter,
+});
+const initialLiveSkillList: string[] = Array.from(
+  new Set(initialPlates.map((p) => p.LiveSkill).filter((f) => f !== null))
+);
+
+export const liveSkillListState = atom({
+  key: "liveSkillList",
+  default: initialLiveSkillList,
 });
 
 export const filteredPlateState = selector({
@@ -119,10 +129,14 @@ export const filteredPlateState = selector({
     var usedAttribute = usedRality.filter(
       (item) => filter.useAttribute.find((f) => f.type === item.Attribute)?.use
     );
+    var useLiveSkill = usedAttribute.filter(
+      (item) =>
+        filter.useLiveSkill === "" || filter.useLiveSkill === item.LiveSkill
+    );
     // TODO : お気に入りを使ってフィルタリングするかどうかを指定するフィルタリング項目を画面とfavsStateに追加する（でもlocalstorageに保存するのは配列のみにしたい）
     //var usedFavs = usedType.filter((item) => favs.find((f) => f === item.Id));
     //return usedFavs;
-    return usedAttribute;
+    return useLiveSkill;
   },
 });
 

@@ -37,7 +37,7 @@ function App() {
         style={{
           position: "fixed",
           top: 26,
-          height: 78,
+          height: 100,
           width: "100%",
           padding: 5,
           boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
