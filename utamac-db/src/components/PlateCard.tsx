@@ -31,14 +31,19 @@ export const PlateCard = (props: PlateCardProps) => {
 
   const onOpenDetail = (plate: Plate) => {};
   const onFavChange = (id: number) => {
-    var index = favs.indexOf(id);
-    if (index === -1) {
+    let fav = favs.get(id);
+    if (fav === undefined) {
       setFavs((f) => {
-        return [...f, id].sort();
+        return f.set(id, false);
+      });
+    } else if (!fav && plate.InitialRarity !== plate.MaxRarity) {
+      setFavs((f) => {
+        return f.set(id, true);
       });
     } else {
       setFavs((f) => {
-        return f.filter((p) => p !== id).sort();
+        f.delete(id);
+        return f;
       });
     }
   };
@@ -56,17 +61,23 @@ export const PlateCard = (props: PlateCardProps) => {
     >
       <div style={{ clear: "left" }}>
         <h4 style={{ width: "95%", margin: 0, float: "left" }}>{plate.Name}</h4>
-        <span style={{ float: "left" }} onClick={() => onFavChange(plate.Id)}>
-          {favs.indexOf(plate.Id) !== -1 ? "★" : "☆"}
+        <span
+          style={{
+            float: "left",
+            color: favs.get(plate.Id) ? "purple" : "black",
+          }}
+          onClick={() => onFavChange(plate.Id)}
+        >
+          {favs.get(plate.Id) !== undefined ? "★" : "☆"}
         </span>
       </div>
       <img
         src={released ? plate.ReleasedImage : plate.InitialImage}
         alt={plate.Name}
-        style={{ width: "60%", float: "left" }}
+        style={{ width: "65%", float: "left" }}
         onClick={onChangeRality}
       />
-      <div style={{ float: "left", width: "40%" }}>
+      <div style={{ float: "left", width: "35%" }}>
         <ul
           style={{
             listStyle: "none",
@@ -75,35 +86,17 @@ export const PlateCard = (props: PlateCardProps) => {
             marginLeft: 5,
           }}
         >
-          <li>Total:</li>
-          <li>Voice:</li>
-          <li>Soul:</li>
-          <li>Charm:</li>
-        </ul>
-        <ul
-          style={{
-            listStyle: "none",
-            float: "left",
-            paddingLeft: 0,
-            textAlign: "right",
-          }}
-        >
-          <li>{plate.MaxTotal}</li>
-          <li>{plate.MaxVoice}</li>
-          <li>{plate.MaxSoul}</li>
-          <li>{plate.MaxCharm}</li>
+          <li>Total:{plate.MaxTotal}</li>
+          <li>Voice:{plate.MaxVoice}</li>
+          <li>Soul: {plate.MaxSoul}</li>
+          <li>Charm:{plate.MaxCharm}</li>
         </ul>
       </div>
       <div style={{ clear: "left" }}>
         <ul style={{ listStyle: "none", float: "left", paddingLeft: 0 }}>
-          <li>Center:</li>
-          <li>Active:</li>
-          <li>Live:</li>
-        </ul>
-        <ul style={{ listStyle: "none", float: "left", paddingLeft: 0 }}>
-          <li>{plate.CenterSkill}</li>
-          <li>{plate.ActiveSkill}</li>
-          <li>{plate.LiveSkill}</li>
+          <li>Center:{plate.CenterSkill}</li>
+          <li>Active:{plate.ActiveSkill}</li>
+          <li>Live :{plate.LiveSkill}</li>
         </ul>
         <div style={{ clear: "left" }}>
           <button onClick={() => onOpenDetail(plate)} style={{ width: "100%" }}>

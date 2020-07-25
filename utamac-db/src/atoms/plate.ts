@@ -1,19 +1,6 @@
 import { atom, selector } from "recoil";
 import plateList from "../resources/plateList.json";
 
-let initialFavs: number[];
-var json = localStorage.getItem("favsPlate");
-if (json !== null) {
-  initialFavs = JSON.parse(json);
-} else {
-  initialFavs = [];
-}
-
-export const favsState = atom({
-  key: "favsPlate",
-  default: initialFavs,
-});
-
 export interface Plate {
   Id: number;
   Url: string;
@@ -62,110 +49,144 @@ export const plateState = atom({
   default: initialPlates,
 });
 
-export type RalityFilter = {
-  rality: number;
-  use: boolean;
-};
+export const liveSkillListState = atom({
+  key: "liveSkillList",
+  default: Array.from(
+    new Set(initialPlates.map((p) => p.LiveSkill).filter((f) => f !== null))
+  ),
+});
 
-export type AttributeFilter = {
-  type: string;
-  use: boolean;
-};
-
-export type ExpectedValueFilter = {
-  name: string;
-  has: boolean | null; // has expected value? yes:true / no:false / both:null
-};
-
-export interface PlateFilter {
-  useRality: RalityFilter[];
-  useAttribute: AttributeFilter[];
-  useLiveSkill: string;
-  hasExpected: ExpectedValueFilter[];
+let initialFavs: Map<number, boolean>;
+var json = localStorage.getItem("favsPlate");
+if (json !== null) {
+  initialFavs = new Map(JSON.parse(json));
+} else {
+  initialFavs = new Map<number, boolean>();
 }
 
-let initialPlateFilter: PlateFilter;
-var filterJjson = localStorage.getItem("filter");
-if (filterJjson !== null) {
-  initialPlateFilter = JSON.parse(filterJjson);
+export const favsState = atom({
+  key: "favsPlate",
+  default: initialFavs,
+});
+
+let initialRalities: Map<string, boolean>;
+var ralityJson = localStorage.getItem("plateRality");
+if (ralityJson !== null) {
+  initialRalities = new Map(JSON.parse(ralityJson));
 } else {
-  initialPlateFilter = {
-    useRality: [
-      { rality: 6, use: true },
-      { rality: 5, use: true },
-      { rality: 4, use: true },
-      { rality: 3, use: true },
-      { rality: 2, use: true },
-      { rality: 1, use: true },
-    ],
-    useAttribute: [
-      { type: "star", use: true },
-      { type: "love", use: true },
-      { type: "life", use: true },
-    ],
-    useLiveSkill: "",
-    hasExpected: [
-      { name: "Life", has: null },
-      { name: "Score", has: null },
-      { name: "Item", has: null },
-      { name: "ForldWave", has: null },
-      { name: "Attack", has: null },
-    ],
-  };
+  initialRalities = new Map([
+    ["1", true],
+    ["2", true],
+    ["3", true],
+    ["4", true],
+    ["5", true],
+    ["6", true],
+  ]);
+}
+
+let initialTypes: Map<string, boolean>;
+var typeJson = localStorage.getItem("plateType");
+if (typeJson !== null) {
+  initialTypes = new Map(JSON.parse(typeJson));
+} else {
+  initialTypes = new Map([
+    ["star", true],
+    ["love", true],
+    ["life", true],
+  ]);
+}
+
+let initialLiveSkill: string;
+var liveSkill = localStorage.getItem("liveSkill");
+initialLiveSkill = liveSkill !== null ? liveSkill : "";
+
+let initialEffectiveDivas: Map<string, boolean>;
+var effectiveDivaJson = localStorage.getItem("plateEffectiveDiva");
+if (effectiveDivaJson !== null) {
+  initialEffectiveDivas = new Map(JSON.parse(effectiveDivaJson));
+} else {
+  initialEffectiveDivas = new Map([
+    ["フレイア・ヴィオン", true],
+    ["美雲・ギンヌメール", true],
+    ["カナメ・バッカニア", true],
+    ["マキナ・中島", true],
+    ["レイナ・プラウラー", true],
+    ["ランカ・リー", true],
+    ["シェリル・ノーム", true],
+    ["ミレーヌ・ジーナス", true],
+    ["熱気バサラ", true],
+    ["リン・ミンメイ", true],
+  ]);
+}
+
+export interface PlateFilterSetting {
+  rality: Map<string, boolean>;
+  type: Map<string, boolean>;
+  liveSkill: string;
+  effectiveDiva: Map<string, boolean>;
 }
 
 export const plateFilterState = atom({
-  key: "filter",
-  default: initialPlateFilter,
+  key: "plateFilterState",
+  default: {
+    rality: initialRalities,
+    type: initialTypes,
+    liveSkill: initialLiveSkill,
+    effectiveDiva: initialEffectiveDivas,
+  } as PlateFilterSetting,
 });
-const initialLiveSkillList: string[] = Array.from(
-  new Set(initialPlates.map((p) => p.LiveSkill).filter((f) => f !== null))
-);
 
-export const liveSkillListState = atom({
-  key: "liveSkillList",
-  default: initialLiveSkillList,
-});
+export interface FilteredPlate {
+  count: number;
+  list: Plate[];
+}
 
 export const filteredPlateState = selector({
   key: "filteredPlateState",
   get: ({ get }) => {
-    const filter = get(plateFilterState);
     const list = get(plateState);
-    //const favs = get(favsState);
-    var usedRality = list.filter(
-      (item) =>
-        filter.useRality.find((f) => f.rality === item.InitialRarity)?.use
+    const filter = get(plateFilterState);
+
+    const filterRality = (p: Plate) =>
+      filter.rality.get(p.InitialRarity.toString());
+    const filterType = (p: Plate) => filter.type.get(p.Attribute);
+    const filterLiveSkill = (p: Plate) => filter.liveSkill === p.LiveSkill;
+    const filterEffectiveDiva = (p: Plate) => {
+      if (p.EffectiveDiva === null) return true;
+      return p.EffectiveDiva.some((v) => filter.effectiveDiva.get(v));
+    };
+    const skipRality = Array.from(filter.rality.values()).every((v) => v);
+    const skipType = Array.from(filter.type.values()).every((v) => v);
+    const skipLiveSkill = filter.liveSkill === "";
+    const skipEffectiveDiva = Array.from(filter.effectiveDiva.values()).every(
+      (v) => v
     );
-    var usedAttribute = usedRality.filter(
-      (item) => filter.useAttribute.find((f) => f.type === item.Attribute)?.use
+
+    if (skipRality && skipType && skipLiveSkill && skipEffectiveDiva) {
+      return { count: list.length, list: list } as FilteredPlate;
+    }
+    var results = list.filter(
+      (p) =>
+        (skipRality || filterRality(p)) &&
+        (skipType || filterType(p)) &&
+        (skipLiveSkill || filterLiveSkill(p)) &&
+        (skipEffectiveDiva || filterEffectiveDiva(p))
     );
-    var useLiveSkill = usedAttribute.filter(
-      (item) =>
-        filter.useLiveSkill === "" || filter.useLiveSkill === item.LiveSkill
-    );
+    return {
+      count: results.length,
+      list: results,
+    } as FilteredPlate;
     // TODO : お気に入りを使ってフィルタリングするかどうかを指定するフィルタリング項目を画面とfavsStateに追加する（でもlocalstorageに保存するのは配列のみにしたい）
     //var usedFavs = usedType.filter((item) => favs.find((f) => f === item.Id));
-    //return usedFavs;
-    return useLiveSkill;
   },
 });
 
-export interface PlatePaging {
-  current: number;
-  pages: number;
-  numberOf: number;
-}
-
-const initialPlatePaging = {
-  current: 1,
-  pages: 1,
-  numberOf: 10,
-};
-
 export const platePagingState = atom({
   key: "paging",
-  default: initialPlatePaging,
+  default: {
+    current: 1,
+    numberOf: 10,
+  },
 });
 
 export const pagedPlateState = selector({
@@ -173,11 +194,11 @@ export const pagedPlateState = selector({
   get: ({ get }) => {
     const filteredList = get(filteredPlateState);
     const paging = get(platePagingState);
-    const count = filteredList.length;
-    if (count <= paging.numberOf) return filteredList;
+    const count = filteredList.count;
+    if (count <= paging.numberOf) return filteredList.list;
     const pages = Math.ceil(count / paging.numberOf);
-    const current = paging.current > pages ? paging.pages : paging.current;
-    return filteredList.slice(
+    const current = paging.current > pages ? pages : paging.current;
+    return filteredList.list.slice(
       paging.numberOf * (current - 1),
       paging.numberOf * current
     );

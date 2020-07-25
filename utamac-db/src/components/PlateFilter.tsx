@@ -1,6 +1,7 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { plateFilterState, liveSkillListState } from "../atoms/plate";
+import { plateFilterState } from "../atoms/plate";
+import { liveSkillListState } from "../atoms/plate";
 
 type PlateFilterProps = {
   children?: React.ReactNode;
@@ -8,78 +9,110 @@ type PlateFilterProps = {
 
 export const PlateFilter = (props: PlateFilterProps) => {
   const [filter, setFilter] = useRecoilState(plateFilterState);
+  // const [effectiveDivaFilter, setEffectiveDivaFilter] = useRecoilState(
+  //   plateEffectiveDivaState
+  // );
   const liveSkillList = useRecoilValue(liveSkillListState);
-  const onChangeUseRality = (i: number) => {
-    setFilter((f) => {
-      var newValue = !f.useRality[i].use;
-      return {
-        ...f,
-        useRality: [
-          ...f.useRality.slice(0, i),
-          { ...f.useRality[i], use: newValue },
-          ...f.useRality.slice(i + 1),
-        ],
-      };
+
+  const generateRalityFilter = () => {
+    let results: JSX.Element[] = [];
+    filter.rality.forEach((v, k) => {
+      results.push(
+        <label key={"useRality" + k} style={{ marginRight: 5 }}>
+          <input
+            type="checkbox"
+            checked={v}
+            onChange={() =>
+              setFilter((f) => {
+                return { ...f, rality: f.rality.set(k, !v) };
+              })
+            }
+          />
+          {k}
+        </label>
+      );
     });
+    return results;
   };
 
-  const onChangeUseType = (i: number) => {
-    setFilter((f) => {
-      var newValue = !f.useAttribute[i].use;
-      return {
-        ...f,
-        useAttribute: [
-          ...f.useAttribute.slice(0, i),
-          { ...f.useAttribute[i], use: newValue },
-          ...f.useAttribute.slice(i + 1),
-        ],
-      };
+  const typePattern = new Map([
+    ["star", { name: "星", color: "#AAAA44" }],
+    ["love", { name: "愛", color: "#AA77AA" }],
+    ["life", { name: "命", color: "#44AAAA" }],
+  ]);
+
+  const generateTypeFilter = () => {
+    let results: JSX.Element[] = [];
+    filter.type.forEach((v, k) => {
+      results.push(
+        <label
+          key={"useType" + k}
+          style={{ marginRight: 5, color: typePattern.get(k)?.color }}
+        >
+          <input
+            type="checkbox"
+            checked={v}
+            onChange={() =>
+              setFilter((f) => {
+                return { ...f, type: f.type.set(k, !v) };
+              })
+            }
+          />
+          {typePattern.get(k)?.name}
+        </label>
+      );
     });
+    return results;
   };
 
-  const onChangeUseLiveSkill = (skill: string) => {
-    setFilter((f) => {
-      return { ...f, useLiveSkill: skill };
+  const generateEffectiveDivaFilter = () => {
+    let results: JSX.Element[] = [];
+    filter.effectiveDiva.forEach((v, k) => {
+      results.push(
+        <label
+          key={"useEffectiveDiva" + k}
+          style={{ float: "left", marginRight: 5 }}
+        >
+          <input
+            type="checkbox"
+            checked={v}
+            onChange={() =>
+              setFilter((f) => {
+                return { ...f, effectiveDiva: f.effectiveDiva.set(k, !v) };
+              })
+            }
+          />
+          {k}
+        </label>
+      );
     });
+    return results;
   };
-
   return (
     <div
       style={{
-        margin: 2,
+        margin: 5,
       }}
     >
       <div>
         レアリティ:
-        {filter.useRality.map((r, i) => (
-          <label key={"useRality" + i}>
-            <input
-              type="checkbox"
-              checked={r.use}
-              onChange={() => onChangeUseRality(i)}
-            />
-            {r.rality}
-          </label>
-        ))}
+        {generateRalityFilter()}
       </div>
+      <hr />
       <div>
         属性:
-        {filter.useAttribute.map((t, i) => (
-          <label key={"useType" + i}>
-            <input
-              type="checkbox"
-              checked={t.use}
-              onChange={() => onChangeUseType(i)}
-            />
-            {t.type}
-          </label>
-        ))}
+        {generateTypeFilter()}
       </div>
+      <hr />
       <div>
         ライブスキル:
         <select
-          value={filter.useLiveSkill}
-          onChange={(e) => onChangeUseLiveSkill(e.currentTarget.value)}
+          value={filter.liveSkill}
+          onChange={(e) =>
+            setFilter((f) => {
+              return { ...f, liveSkill: e.currentTarget.value };
+            })
+          }
         >
           <option value={""}></option>
           {liveSkillList.map((l, i) => (
@@ -88,6 +121,10 @@ export const PlateFilter = (props: PlateFilterProps) => {
             </option>
           ))}
         </select>
+        <div style={{ marginLeft: 5 }}>
+          <div style={{ float: "left" }}>対応歌姫:</div>
+          {generateEffectiveDivaFilter()}
+        </div>
       </div>
     </div>
   );

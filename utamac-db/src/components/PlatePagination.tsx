@@ -10,13 +10,13 @@ export const PlatePagination = (props: PlatePaginationProps) => {
   const filteredPlates = useRecoilValue(filteredPlateState);
   const [paging, setPaging] = useRecoilState(platePagingState);
 
-  const count = filteredPlates.length;
+  const count = filteredPlates.count;
   const pages = count === 0 ? 1 : Math.ceil(count / paging.numberOf);
   const current = paging.current > pages ? pages : paging.current;
 
-  if (pages !== paging.pages || current !== paging.current) {
+  if (current !== paging.current) {
     setPaging((p) => {
-      return { ...p, current: current, pages: pages };
+      return { ...p, current: current };
     });
   }
 
@@ -34,7 +34,7 @@ export const PlatePagination = (props: PlatePaginationProps) => {
   };
 
   const getJumpPages = () => {
-    switch (paging.pages) {
+    switch (pages) {
       case 0:
         return [];
       case 1:
@@ -50,7 +50,7 @@ export const PlatePagination = (props: PlatePaginationProps) => {
       case 6:
         return [1, 2, 3, 4, 5, 6];
       default:
-        var last = [-2, -1, 0].map((i) => paging.pages + i);
+        var last = [-2, -1, 0].map((i) => pages + i);
         return [1, 2, 3, ...last];
     }
   };
@@ -59,9 +59,11 @@ export const PlatePagination = (props: PlatePaginationProps) => {
   return (
     <div
       style={{
-        margin: 2,
+        margin: 5,
+        clear: "left",
       }}
     >
+      <hr />
       表示:
       {jumpPages.slice(0, 3).map((b) => (
         <button
@@ -91,7 +93,7 @@ export const PlatePagination = (props: PlatePaginationProps) => {
       />
       <button
         onClick={() => jumpToPage(paging.current + 1)}
-        disabled={paging.current === paging.pages}
+        disabled={paging.current === pages}
       >
         ▶
       </button>
