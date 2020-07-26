@@ -1,12 +1,26 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { platePagingState, filteredPlateState } from "../atoms/plate";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Pagination from "@material-ui/lab/Pagination";
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      "& > * + *": {
+        marginTop: theme.spacing(2),
+      },
+    },
+  })
+);
 
 type PlatePaginationProps = {
   children?: React.ReactNode;
 };
 
 export const PlatePagination = (props: PlatePaginationProps) => {
+  const classes = useStyles();
   const filteredPlates = useRecoilValue(filteredPlateState);
   const [paging, setPaging] = useRecoilState(platePagingState);
 
@@ -20,93 +34,20 @@ export const PlatePagination = (props: PlatePaginationProps) => {
     });
   }
 
-  const onChangeCurrentPage = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPaging((p) => {
-      const value = parseInt(e.currentTarget.value);
-      return { ...p, current: isNaN(value) ? 1 : value };
+      return { ...p, current: value };
     });
   };
-
-  const jumpToPage = (i: number) => {
-    setPaging((p) => {
-      return { ...p, current: i };
-    });
-  };
-
-  const getJumpPages = () => {
-    switch (pages) {
-      case 0:
-        return [];
-      case 1:
-        return [1];
-      case 2:
-        return [1, 2];
-      case 3:
-        return [1, 2, 3];
-      case 4:
-        return [1, 2, 3, 4];
-      case 5:
-        return [1, 2, 3, 4, 5];
-      case 6:
-        return [1, 2, 3, 4, 5, 6];
-      default:
-        var last = [-2, -1, 0].map((i) => pages + i);
-        return [1, 2, 3, ...last];
-    }
-  };
-  const jumpPages = getJumpPages();
 
   return (
-    <div
-      style={{
-        margin: 5,
-        clear: "left",
-      }}
-    >
-      <hr />
-      表示:
-      {jumpPages.slice(0, 3).map((b) => (
-        <button
-          key={"jump" + b}
-          onClick={(e) => jumpToPage(b)}
-          disabled={paging.current === b}
-        >
-          {b}
-        </button>
-      ))}
-      ...
-      <button
-        onClick={() => jumpToPage(paging.current - 1)}
-        disabled={paging.current === 1}
-      >
-        ◀
-      </button>
-      <input
-        type="number"
-        value={paging.current}
-        onChange={onChangeCurrentPage}
-        min={1}
-        max={pages}
-        style={{
-          width: "2em",
-        }}
+    <div className={classes.root}>
+      <Pagination
+        count={pages}
+        size={"small"}
+        page={current}
+        onChange={handleChange}
       />
-      <button
-        onClick={() => jumpToPage(paging.current + 1)}
-        disabled={paging.current === pages}
-      >
-        ▶
-      </button>
-      ...
-      {jumpPages.slice(3, 6).map((b) => (
-        <button
-          key={"jump" + b}
-          onClick={(e) => jumpToPage(b)}
-          disabled={paging.current === b}
-        >
-          {b}
-        </button>
-      ))}
     </div>
   );
 };

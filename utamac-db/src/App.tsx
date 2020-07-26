@@ -5,6 +5,8 @@ import { PlateFilter } from "./components/PlateFilter";
 import { PlatePagination } from "./components/PlatePagination";
 import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
 import { favsState, plateFilterState, PlateFilterSetting } from "./atoms/plate";
+import { Container } from "@material-ui/core";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 function PersistenceObserver() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
@@ -52,32 +54,12 @@ function App() {
   return (
     <RecoilRoot>
       <PersistenceObserver />
-      <h3
-        style={{
-          position: "fixed",
-          top: 0,
-          height: 26,
-          margin: 0,
-          paddingLeft: 5,
-          width: "100%",
-          background: "#3399FF",
-          color: "white",
-        }}
-      >
-        歌マクロスDB
-      </h3>
-      <div
-        style={{
-          marginTop: 26,
-          width: "100%",
-          background: "white",
-        }}
-      >
+      <Container maxWidth="xl">
         <PlateFilter />
         <PlatePagination />
         <PlateList />
         <PlatePagination />
-      </div>
+      </Container>
     </RecoilRoot>
   );
 }

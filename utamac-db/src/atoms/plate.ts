@@ -100,23 +100,24 @@ let initialLiveSkill: string;
 var liveSkill = localStorage.getItem("liveSkill");
 initialLiveSkill = liveSkill !== null ? liveSkill : "";
 
+export const defaultEffectiveDivas = new Map([
+  ["フレイア・ヴィオン", true],
+  ["美雲・ギンヌメール", true],
+  ["カナメ・バッカニア", true],
+  ["マキナ・中島", true],
+  ["レイナ・プラウラー", true],
+  ["ランカ・リー", true],
+  ["シェリル・ノーム", true],
+  ["ミレーヌ・ジーナス", true],
+  ["熱気バサラ", true],
+  ["リン・ミンメイ", true],
+]);
 let initialEffectiveDivas: Map<string, boolean>;
 var effectiveDivaJson = localStorage.getItem("plateEffectiveDiva");
 if (effectiveDivaJson !== null) {
   initialEffectiveDivas = new Map(JSON.parse(effectiveDivaJson));
 } else {
-  initialEffectiveDivas = new Map([
-    ["フレイア・ヴィオン", true],
-    ["美雲・ギンヌメール", true],
-    ["カナメ・バッカニア", true],
-    ["マキナ・中島", true],
-    ["レイナ・プラウラー", true],
-    ["ランカ・リー", true],
-    ["シェリル・ノーム", true],
-    ["ミレーヌ・ジーナス", true],
-    ["熱気バサラ", true],
-    ["リン・ミンメイ", true],
-  ]);
+  initialEffectiveDivas = defaultEffectiveDivas;
 }
 
 export interface PlateFilterSetting {

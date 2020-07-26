@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Plate, favsState } from "../atoms/plate";
 import { useRecoilState } from "recoil";
+import { Paper } from "@material-ui/core";
 
 export type PlateCardProps = {
   plate: Plate;
@@ -49,13 +50,10 @@ export const PlateCard = (props: PlateCardProps) => {
   };
 
   return (
-    <div
+    <Paper
       style={{
         margin: 2,
         padding: 5,
-        clear: "left",
-        boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-        transition: "0.3s",
         background: getPlateColor(plate.Attribute),
       }}
     >
@@ -104,6 +102,6 @@ export const PlateCard = (props: PlateCardProps) => {
           </button>
         </div>
       </div>
-    </div>
+    </Paper>
   );
 };
