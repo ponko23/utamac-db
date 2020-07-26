@@ -2,7 +2,6 @@ import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { platePagingState, filteredPlateState } from "../atoms/plate";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
 
 const useStyles = makeStyles((theme) =>

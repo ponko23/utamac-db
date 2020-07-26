@@ -5,7 +5,7 @@ import {
   liveSkillListState,
   defaultEffectiveDivas,
 } from "../atoms/plate";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { ToggleButton } from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 
 type PlateFilterProps = {
@@ -111,18 +111,6 @@ export const PlateFilter = (props: PlateFilterProps) => {
       );
     });
     return results;
-  };
-
-  const handleEffectiveDiva = (
-    event: React.MouseEvent<HTMLElement>,
-    key: string
-  ) => {
-    setFilter((f) => {
-      return {
-        ...f,
-        effectiveDiva: f.effectiveDiva.set(key, !f.effectiveDiva.get(key)),
-      };
-    });
   };
 
   const generateEffectiveDivaFilter = () => {

@@ -6,7 +6,6 @@ import { PlatePagination } from "./components/PlatePagination";
 import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
 import { favsState, plateFilterState, PlateFilterSetting } from "./atoms/plate";
 import { Container } from "@material-ui/core";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 function PersistenceObserver() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
