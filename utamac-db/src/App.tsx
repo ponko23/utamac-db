@@ -5,7 +5,7 @@ import { PlateFilter } from "./components/PlateFilter";
 import { PlatePagination } from "./components/PlatePagination";
 import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
 import { favsState, plateFilterState, PlateFilterSetting } from "./atoms/plate";
-import { Container } from "@material-ui/core";
+import { Container, Divider } from "@material-ui/core";
 
 function PersistenceObserver() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
@@ -53,10 +53,16 @@ function App() {
   return (
     <RecoilRoot>
       <PersistenceObserver />
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        style={{ paddingLeft: 0, paddingRight: 0, marginBottom: 5 }}
+      >
         <PlateFilter />
+        <Divider />
         <PlatePagination />
+        <Divider />
         <PlateList />
+        <Divider />
         <PlatePagination />
       </Container>
     </RecoilRoot>

@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) =>
       "& > * + *": {
         marginTop: theme.spacing(2),
       },
+      margin: 5,
     },
   })
 );
@@ -45,6 +46,8 @@ export const PlatePagination = (props: PlatePaginationProps) => {
         count={pages}
         size={"small"}
         page={current}
+        variant="outlined"
+        shape="rounded"
         onChange={handleChange}
       />
     </div>

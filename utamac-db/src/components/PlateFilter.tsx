@@ -3,10 +3,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   plateFilterState,
   liveSkillListState,
+  defaultRalities,
+  defaultTypes,
   defaultEffectiveDivas,
 } from "../atoms/plate";
 import { ToggleButton } from "@material-ui/lab";
-import Typography from "@material-ui/core/Typography";
+import { Typography } from "@material-ui/core";
 
 type PlateFilterProps = {
   children?: React.ReactNode;
@@ -55,6 +57,21 @@ const divaIcons = new Map([
   ],
 ]);
 
+const typeIcons = new Map([
+  [
+    "star",
+    "https://cdn-image.pf.dena.com/fa9c327e33426cd5e3dff097aa3feee754c90f9a/1/23ae18f6-1a63-33f8-bc97-bc1708d7d405.png",
+  ],
+  [
+    "love",
+    "https://cdn-image.pf.dena.com/fa9c327e33426cd5e3dff097aa3feee754c90f9a/1/1406e264-badf-3721-bcd0-be3375593d1d.png",
+  ],
+  [
+    "life",
+    "https://cdn-image.pf.dena.com/fa9c327e33426cd5e3dff097aa3feee754c90f9a/1/f6c1446e-9946-3f65-900d-0fd3236b0afb.png",
+  ],
+]);
+
 export const PlateFilter = (props: PlateFilterProps) => {
   const [filter, setFilter] = useRecoilState(plateFilterState);
   // const [effectiveDivaFilter, setEffectiveDivaFilter] = useRecoilState(
@@ -66,48 +83,47 @@ export const PlateFilter = (props: PlateFilterProps) => {
     let results: JSX.Element[] = [];
     filter.rality.forEach((v, k) => {
       results.push(
-        <label key={"useRality" + k} style={{ marginRight: 5 }}>
-          <input
-            type="checkbox"
-            checked={v}
-            onChange={() =>
-              setFilter((f) => {
-                return { ...f, rality: f.rality.set(k, !v) };
-              })
-            }
-          />
+        <ToggleButton
+          key={"rality" + k}
+          selected={v}
+          value={v}
+          onChange={() =>
+            setFilter((f) => {
+              return { ...f, rality: f.rality.set(k, !v) };
+            })
+          }
+          style={{
+            paddingLeft: 7,
+            paddingRight: 7,
+            paddingTop: 0,
+            paddingBottom: 0,
+            margin: 1,
+          }}
+        >
           {k}
-        </label>
+        </ToggleButton>
       );
     });
     return results;
   };
 
-  const typePattern = new Map([
-    ["star", { name: "星", color: "#AAAA44" }],
-    ["love", { name: "愛", color: "#AA77AA" }],
-    ["life", { name: "命", color: "#44AAAA" }],
-  ]);
-
   const generateTypeFilter = () => {
     let results: JSX.Element[] = [];
     filter.type.forEach((v, k) => {
       results.push(
-        <label
-          key={"useType" + k}
-          style={{ marginRight: 5, color: typePattern.get(k)?.color }}
+        <ToggleButton
+          key={"type" + k}
+          value={v}
+          selected={v}
+          onChange={() =>
+            setFilter((f) => {
+              return { ...f, type: f.type.set(k, !v) };
+            })
+          }
+          style={{ padding: 0, margin: 1 }}
         >
-          <input
-            type="checkbox"
-            checked={v}
-            onChange={() =>
-              setFilter((f) => {
-                return { ...f, type: f.type.set(k, !v) };
-              })
-            }
-          />
-          {typePattern.get(k)?.name}
-        </label>
+          <img src={typeIcons.get(k)} width={30} alt={k} title={k} />
+        </ToggleButton>
       );
     });
     return results;
@@ -118,20 +134,23 @@ export const PlateFilter = (props: PlateFilterProps) => {
     filter.effectiveDiva.forEach((v, k) => {
       results.push(
         <ToggleButton
+          key={"diva" + (results.length + 1)}
+          value={v}
           selected={v}
           onChange={() =>
             setFilter((f) => {
               return { ...f, effectiveDiva: f.effectiveDiva.set(k, !v) };
             })
           }
-          style={{ padding: 0 }}
+          style={{ padding: 0, marginLeft: 1 }}
         >
-          <img src={divaIcons.get(k)} width={25} alt={k} title={k} />
+          <img src={divaIcons.get(k)} width={30} alt={k} title={k} />
         </ToggleButton>
       );
     });
     return results;
   };
+
   return (
     <div
       style={{
@@ -139,15 +158,52 @@ export const PlateFilter = (props: PlateFilterProps) => {
       }}
     >
       <div>
-        レアリティ:
+        <Typography variant="subtitle2">レアリティ</Typography>
+        <ToggleButton
+          key={"ralityAll"}
+          style={{
+            paddingLeft: 7,
+            paddingRight: 7,
+            paddingTop: 0,
+            paddingBottom: 0,
+            margin: 1,
+          }}
+          value={"all"}
+          onChange={() =>
+            setFilter((f) => {
+              return { ...f, rality: new Map(defaultRalities) };
+            })
+          }
+        >
+          ALL
+        </ToggleButton>
         {generateRalityFilter()}
       </div>
       <div>
-        属性:
+        <Typography variant="subtitle2">属性</Typography>
+        <ToggleButton
+          key={"typeAll"}
+          style={{
+            paddingLeft: 7,
+            paddingRight: 7,
+            paddingTop: 3,
+            paddingBottom: 3,
+            margin: 1,
+          }}
+          value={"all"}
+          onChange={() =>
+            setFilter((f) => {
+              return { ...f, type: new Map(defaultTypes) };
+            })
+          }
+        >
+          ALL
+        </ToggleButton>
         {generateTypeFilter()}
       </div>
+
       <div>
-        ライブスキル:
+        <Typography variant="subtitle2">ライブスキル</Typography>
         <select
           value={filter.liveSkill}
           onChange={(e) =>
@@ -164,13 +220,20 @@ export const PlateFilter = (props: PlateFilterProps) => {
           ))}
         </select>
         <div>
-          <Typography variant="subtitle1">対応歌姫</Typography>
+          <Typography variant="subtitle2">対応歌姫</Typography>
           <ToggleButton
-            style={{ padding: 0 }}
+            key={"divaAll"}
+            style={{
+              paddingLeft: 7,
+              paddingRight: 7,
+              paddingTop: 3,
+              paddingBottom: 3,
+              marginLeft: 1,
+            }}
             value={"all"}
             onChange={() =>
               setFilter((f) => {
-                return { ...f, effectiveDiva: defaultEffectiveDivas };
+                return { ...f, effectiveDiva: new Map(defaultEffectiveDivas) };
               })
             }
           >

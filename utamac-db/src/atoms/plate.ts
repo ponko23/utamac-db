@@ -69,31 +69,33 @@ export const favsState = atom({
   default: initialFavs,
 });
 
+export const defaultRalities = new Map([
+  ["1", true],
+  ["2", true],
+  ["3", true],
+  ["4", true],
+  ["5", true],
+  ["6", true],
+]);
 let initialRalities: Map<string, boolean>;
 var ralityJson = localStorage.getItem("plateRality");
 if (ralityJson !== null) {
   initialRalities = new Map(JSON.parse(ralityJson));
 } else {
-  initialRalities = new Map([
-    ["1", true],
-    ["2", true],
-    ["3", true],
-    ["4", true],
-    ["5", true],
-    ["6", true],
-  ]);
+  initialRalities = new Map(defaultRalities);
 }
 
+export const defaultTypes = new Map([
+  ["star", true],
+  ["love", true],
+  ["life", true],
+]);
 let initialTypes: Map<string, boolean>;
 var typeJson = localStorage.getItem("plateType");
 if (typeJson !== null) {
   initialTypes = new Map(JSON.parse(typeJson));
 } else {
-  initialTypes = new Map([
-    ["star", true],
-    ["love", true],
-    ["life", true],
-  ]);
+  initialTypes = new Map(defaultTypes);
 }
 
 let initialLiveSkill: string;
@@ -117,7 +119,7 @@ var effectiveDivaJson = localStorage.getItem("plateEffectiveDiva");
 if (effectiveDivaJson !== null) {
   initialEffectiveDivas = new Map(JSON.parse(effectiveDivaJson));
 } else {
-  initialEffectiveDivas = defaultEffectiveDivas;
+  initialEffectiveDivas = new Map(defaultEffectiveDivas);
 }
 
 export interface PlateFilterSetting {
