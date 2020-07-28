@@ -4,7 +4,11 @@ import { PlateList } from "./containers/PlateList";
 import { PlateFilter } from "./components/PlateFilter";
 import { PlatePagination } from "./components/PlatePagination";
 import { useRecoilTransactionObserver_UNSTABLE } from "recoil";
-import { favsState, plateFilterState, PlateFilterSetting } from "./atoms/plate";
+import {
+  favsState,
+  plateFilterSettingState,
+  PlateFilterSetting,
+} from "./atoms/plate";
 import { Container, Divider } from "@material-ui/core";
 
 function PersistenceObserver() {
@@ -17,7 +21,7 @@ function PersistenceObserver() {
       localStorage.setItem(favsState.key, favsJson);
     }
 
-    var filter = snapshot.getLoadable(plateFilterState)
+    var filter = snapshot.getLoadable(plateFilterSettingState)
       .contents as PlateFilterSetting;
 
     var rality = Array.from(filter.rality as Map<string, boolean>);
@@ -55,10 +59,9 @@ function App() {
       <PersistenceObserver />
       <Container
         maxWidth="xl"
-        style={{ paddingLeft: 0, paddingRight: 0, marginBottom: 5 }}
+        style={{ paddingLeft: 2, paddingRight: 2, marginBottom: 2 }}
       >
         <PlateFilter />
-        <Divider />
         <PlatePagination />
         <Divider />
         <PlateList />

@@ -129,14 +129,54 @@ export interface PlateFilterSetting {
   effectiveDiva: Map<string, boolean>;
 }
 
-export const plateFilterState = atom({
-  key: "plateFilterState",
+export const plateFilterSettingState = atom({
+  key: "plateFilterSettingState",
   default: {
     rality: initialRalities,
     type: initialTypes,
     liveSkill: initialLiveSkill,
     effectiveDiva: initialEffectiveDivas,
   } as PlateFilterSetting,
+});
+
+export interface PlateFilterState {
+  useRality: boolean;
+  useType: boolean;
+  useLiveSkill: boolean;
+  useEffectiveDiva: boolean;
+  useFilterCount: number;
+}
+
+export const plateFilterState = selector({
+  key: "plateFilterState",
+  get: ({ get }) => {
+    const filter = get(plateFilterSettingState);
+    let state: PlateFilterState = {
+      useRality: false,
+      useType: false,
+      useLiveSkill: false,
+      useEffectiveDiva: false,
+      useFilterCount: 0,
+    };
+
+    if (!Array.from(filter.rality.values()).every((v) => v)) {
+      state.useRality = true;
+      state.useFilterCount++;
+    }
+    if (!Array.from(filter.type.values()).every((v) => v)) {
+      state.useType = true;
+      state.useFilterCount++;
+    }
+    if (filter.liveSkill !== "") {
+      state.useLiveSkill = true;
+      state.useFilterCount++;
+    }
+    if (!Array.from(filter.effectiveDiva.values()).every((v) => v)) {
+      state.useEffectiveDiva = true;
+      state.useFilterCount++;
+    }
+    return state;
+  },
 });
 
 export interface FilteredPlate {
@@ -148,8 +188,8 @@ export const filteredPlateState = selector({
   key: "filteredPlateState",
   get: ({ get }) => {
     const list = get(plateState);
-    const filter = get(plateFilterState);
-
+    const filter = get(plateFilterSettingState);
+    const filterState = get(plateFilterState);
     const filterRality = (p: Plate) =>
       filter.rality.get(p.InitialRarity.toString());
     const filterType = (p: Plate) => filter.type.get(p.Attribute);
@@ -158,22 +198,16 @@ export const filteredPlateState = selector({
       if (p.EffectiveDiva === null) return true;
       return p.EffectiveDiva.some((v) => filter.effectiveDiva.get(v));
     };
-    const skipRality = Array.from(filter.rality.values()).every((v) => v);
-    const skipType = Array.from(filter.type.values()).every((v) => v);
-    const skipLiveSkill = filter.liveSkill === "";
-    const skipEffectiveDiva = Array.from(filter.effectiveDiva.values()).every(
-      (v) => v
-    );
 
-    if (skipRality && skipType && skipLiveSkill && skipEffectiveDiva) {
+    if (filterState.useFilterCount === 0) {
       return { count: list.length, list: list } as FilteredPlate;
     }
     var results = list.filter(
       (p) =>
-        (skipRality || filterRality(p)) &&
-        (skipType || filterType(p)) &&
-        (skipLiveSkill || filterLiveSkill(p)) &&
-        (skipEffectiveDiva || filterEffectiveDiva(p))
+        (!filterState.useRality || filterRality(p)) &&
+        (!filterState.useType || filterType(p)) &&
+        (!filterState.useLiveSkill || filterLiveSkill(p)) &&
+        (!filterState.useEffectiveDiva || filterEffectiveDiva(p))
     );
     return {
       count: results.length,

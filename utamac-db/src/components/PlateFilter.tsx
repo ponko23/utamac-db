@@ -1,14 +1,39 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  plateFilterState,
+  plateFilterSettingState,
   liveSkillListState,
   defaultRalities,
   defaultTypes,
   defaultEffectiveDivas,
+  plateFilterState,
 } from "../atoms/plate";
 import { ToggleButton } from "@material-ui/lab";
-import { Typography } from "@material-ui/core";
+import {
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  createStyles,
+  makeStyles,
+  Theme,
+  Badge,
+  Grid,
+} from "@material-ui/core";
+import { ExpandMore } from "@material-ui/icons";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: "100%",
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+    details: {},
+  })
+);
 
 type PlateFilterProps = {
   children?: React.ReactNode;
@@ -73,7 +98,8 @@ const typeIcons = new Map([
 ]);
 
 export const PlateFilter = (props: PlateFilterProps) => {
-  const [filter, setFilter] = useRecoilState(plateFilterState);
+  const classes = useStyles();
+  const [filter, setFilter] = useRecoilState(plateFilterSettingState);
   // const [effectiveDivaFilter, setEffectiveDivaFilter] = useRecoilState(
   //   plateEffectiveDivaState
   // );
@@ -150,98 +176,111 @@ export const PlateFilter = (props: PlateFilterProps) => {
     });
     return results;
   };
-
+  const filterCount = useRecoilValue(plateFilterState);
   return (
-    <div
-      style={{
-        margin: 5,
-      }}
-    >
-      <div>
-        <Typography variant="subtitle2">レアリティ</Typography>
-        <ToggleButton
-          key={"ralityAll"}
-          style={{
-            paddingLeft: 7,
-            paddingRight: 7,
-            paddingTop: 0,
-            paddingBottom: 0,
-            margin: 1,
-          }}
-          value={"all"}
-          onChange={() =>
-            setFilter((f) => {
-              return { ...f, rality: new Map(defaultRalities) };
-            })
-          }
+    <div className={classes.root}>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMore />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
         >
-          ALL
-        </ToggleButton>
-        {generateRalityFilter()}
-      </div>
-      <div>
-        <Typography variant="subtitle2">属性</Typography>
-        <ToggleButton
-          key={"typeAll"}
-          style={{
-            paddingLeft: 7,
-            paddingRight: 7,
-            paddingTop: 3,
-            paddingBottom: 3,
-            margin: 1,
-          }}
-          value={"all"}
-          onChange={() =>
-            setFilter((f) => {
-              return { ...f, type: new Map(defaultTypes) };
-            })
-          }
-        >
-          ALL
-        </ToggleButton>
-        {generateTypeFilter()}
-      </div>
-
-      <div>
-        <Typography variant="subtitle2">ライブスキル</Typography>
-        <select
-          value={filter.liveSkill}
-          onChange={(e) =>
-            setFilter((f) => {
-              return { ...f, liveSkill: e.currentTarget.value };
-            })
-          }
-        >
-          <option value={""}></option>
-          {liveSkillList.map((l, i) => (
-            <option key={"skill" + i} value={l}>
-              {l}
-            </option>
-          ))}
-        </select>
-        <div>
-          <Typography variant="subtitle2">対応歌姫</Typography>
-          <ToggleButton
-            key={"divaAll"}
-            style={{
-              paddingLeft: 7,
-              paddingRight: 7,
-              paddingTop: 3,
-              paddingBottom: 3,
-              marginLeft: 1,
-            }}
-            value={"all"}
-            onChange={() =>
-              setFilter((f) => {
-                return { ...f, effectiveDiva: new Map(defaultEffectiveDivas) };
-              })
-            }
-          >
-            ALL
-          </ToggleButton>
-          {generateEffectiveDivaFilter()}
-        </div>
-      </div>
+          <Badge color="secondary" badgeContent={filterCount.useFilterCount}>
+            <Typography className={classes.heading}>フィルター</Typography>
+          </Badge>
+        </AccordionSummary>
+        <AccordionDetails className={classes.details}>
+          <Grid container justify="center">
+            <Grid item xs={12} sm={4}>
+              <Typography variant="subtitle2">レアリティ</Typography>
+              <ToggleButton
+                key={"ralityAll"}
+                style={{
+                  paddingLeft: 7,
+                  paddingRight: 7,
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                  margin: 1,
+                }}
+                value={"all"}
+                onChange={() =>
+                  setFilter((f) => {
+                    return { ...f, rality: new Map(defaultRalities) };
+                  })
+                }
+              >
+                ALL
+              </ToggleButton>
+              {generateRalityFilter()}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Typography variant="subtitle2">属性</Typography>
+              <ToggleButton
+                key={"typeAll"}
+                style={{
+                  paddingLeft: 7,
+                  paddingRight: 7,
+                  paddingTop: 3,
+                  paddingBottom: 3,
+                  margin: 1,
+                }}
+                value={"all"}
+                onChange={() =>
+                  setFilter((f) => {
+                    return { ...f, type: new Map(defaultTypes) };
+                  })
+                }
+              >
+                ALL
+              </ToggleButton>
+              {generateTypeFilter()}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Typography variant="subtitle2">ライブスキル</Typography>
+              <select
+                value={filter.liveSkill}
+                onChange={(e) =>
+                  setFilter((f) => {
+                    return { ...f, liveSkill: e.currentTarget.value };
+                  })
+                }
+              >
+                <option value={""}></option>
+                {liveSkillList.map((l, i) => (
+                  <option key={"skill" + i} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">対応歌姫</Typography>
+              <ToggleButton
+                key={"divaAll"}
+                style={{
+                  paddingLeft: 7,
+                  paddingRight: 7,
+                  paddingTop: 3,
+                  paddingBottom: 3,
+                  marginLeft: 1,
+                }}
+                value={"all"}
+                onChange={() =>
+                  setFilter((f) => {
+                    return {
+                      ...f,
+                      effectiveDiva: new Map(defaultEffectiveDivas),
+                    };
+                  })
+                }
+              >
+                ALL
+              </ToggleButton>
+              {generateEffectiveDivaFilter()}
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 };
