@@ -1,12 +1,12 @@
-import { CostumeScraper } from "./costume";
+import { costumeScraperAsync } from "./costume";
 import { ScrapeData } from "./scraper";
 
 async function mainAsync() {
   try {
     const outputPath = "../utamac-db/src/resources/";
-    const costumeScaper = new CostumeScraper();
-    await costumeScaper.scrapeToFileAsync(outputPath);
+    await costumeScraperAsync(outputPath);
   } catch (error) {
+    console.log(Object.keys(error), error.message);
     throw error;
   }
 }

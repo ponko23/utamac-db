@@ -4,22 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RootScraper = exports.Scraper = void 0;
-const axios_1 = __importDefault(require("axios"));
 const cheerio_1 = __importDefault(require("cheerio"));
 const fs_1 = __importDefault(require("fs"));
+const request_promise_1 = __importDefault(require("request-promise"));
+const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
 class Scraper {
-    constructor() { }
-    /**
-     *
-     */
-    async getHtmlAsync() {
+    /** コンストラクタ */
+    constructor() {
+        this.baseUrl = baseUrl;
+    }
+    /** htmlテキストを取得する */
+    getHtmlAsync() {
         try {
-            const AxiosInstance = axios_1.default.create();
-            const response = await AxiosInstance.get(this.url);
-            return response.data;
+            const res = request_promise_1.default(this.url);
+            return res.body.toString();
         }
-        catch (err) {
-            throw err;
+        catch (error) {
+            throw error;
         }
     }
     /** htmlテキストを読み込ませたcheerioオブジェクトを取得する

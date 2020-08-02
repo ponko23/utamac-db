@@ -1,57 +1,80 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CostumeScraper = void 0;
-const scraper_1 = require("./scraper");
-class CostumeScraper extends scraper_1.RootScraper {
-    constructor() {
-        super();
-        this.url = "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
-        this.fileName = "costumes";
-    }
-    async scrapeAsync(old) {
-        try {
-            const html = await super.getHtmlAsync();
-            const $ = this.getScraper(html);
-            const lastUpdated = $(".last-updated time").first().html();
-            if (old && old.lastUpdated == lastUpdated) {
+exports.costumeScraper = void 0;
+const cheerio_1 = __importDefault(require("cheerio"));
+const fs_1 = __importDefault(require("fs"));
+const request_promise_1 = __importDefault(require("request-promise"));
+const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
+const url = "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
+async function costumeScraper(outputPath) {
+    try {
+        const filePath = outputPath + "costumes.json";
+        const html = await request_promise_1.default(url);
+        const $ = cheerio_1.default.load(html);
+        const lastUpdated = $(".last-updated time").first().html();
+        if (fs_1.default.existsSync(filePath)) {
+            const oldJson = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
+            const old = JSON.parse(oldJson);
+            if (old.lastUpdated === lastUpdated) {
                 console.log(this.fileName + " : 取得済み");
-                return null;
+                return;
             }
-            // ここで既存ファイルも読み込んで最終更新日のチェックを行い、データを生成処理を進めるか？更新差分を追記するか？とかを切り分けたい
-            // 初期判定処理自体を基底クラスの方で済ませたい
-            const items = $(".page table:first-child>tbody>tr");
-            const costumes = [];
-            items.each((i, element) => {
-                const data = $(element)
-                    .find("td")
-                    .map((i2, td) => td)
-                    .toArray();
-                const name = $(data[1]).find("b>a").text();
-                const diva = $(data[0]).find("b").text();
-                const effect = $(data[2]).text();
-                const url = $(data[1]).find("a").attr("href");
-                const image = $(data[1]).find("a>img").attr("src");
-                if (name && diva && effect) {
-                    costumes.push({
-                        id: costumes.length + 1,
-                        name,
-                        diva,
-                        effect,
-                        url,
-                        image,
-                    });
-                }
-            });
-            return {
-                url: this.url,
-                data: costumes,
-                lastUpdated: lastUpdated,
-            };
         }
-        catch (err) {
-            throw err;
+        // headerを飛ばす
+        const links = $(".page table>tbody>tr>td>b>a")
+            .toArray()
+            .map((e) => $(e).attr("href"));
+        const costumes = [];
+        for (let link of links) {
+            const item = await getHowToGet(link);
+            costumes.push(item);
         }
+        const json = JSON.stringify({
+            url,
+            data: costumes,
+            lastUpdated,
+        });
+        fs_1.default.writeFileSync(outputPath + "costumes.json", json, { encoding: "utf-8" });
+    }
+    catch (error) {
+        throw error;
     }
 }
-exports.CostumeScraper = CostumeScraper;
+exports.costumeScraper = costumeScraper;
+async function getHowToGet(uri) {
+    try {
+        const html = await request_promise_1.default(baseUrl + uri);
+        const $ = cheerio_1.default.load(html);
+        const name = $(".page h1").text();
+        const image = $(".page img").first().attr("src");
+        const rows = $(".page table>tbody>tr");
+        const diva = rows.find("td:contains(歌姫)").next().text();
+        let howToGet = rows.find("td:contains(入手方法)").next().text();
+        const hoToGetMatch = howToGet.match("「(.*)」");
+        if (hoToGetMatch) {
+            howToGet = hoToGetMatch[1];
+        }
+        let effect = rows.find("td:contains(効果)").next().text();
+        const effectMatch = effect.match("(.*)※");
+        if (effectMatch) {
+            effect = effectMatch[1];
+        }
+        const lastUpdated = $(".page .last-updated time").text();
+        return {
+            uri,
+            name,
+            diva,
+            image,
+            howToGet,
+            effect,
+            lastUpdated,
+        };
+    }
+    catch (error) {
+        throw error;
+    }
+}
 //# sourceMappingURL=costume.js.map
