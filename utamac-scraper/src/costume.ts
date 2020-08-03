@@ -4,13 +4,14 @@ import fs from "fs";
 import rp from "request-promise";
 
 export interface Costume {
-  id: number;
+  id: string;
+  uri: string;
   name: string;
   diva: string;
   effect: string;
-  toGet: string;
-  url: string;
+  howToGet: string;
   image: string;
+  lastUpdated: string;
 }
 const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
 const url =
@@ -23,9 +24,10 @@ export async function costumeScraperAsync(outputPath?: string) {
     const html = await rp(url);
     const $ = cheerio.load(html);
     const lastUpdated = $(".last-updated time").first().html();
+    let old: ScrapeData<Costume[]>;
     if (fs.existsSync(filePath)) {
       const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
-      const old = JSON.parse(oldJson) as ScrapeData<Costume[]>;
+      old = JSON.parse(oldJson) as ScrapeData<Costume[]>;
       if (old.lastUpdated === lastUpdated) {
         console.log(this.fileName + " : 取得済み");
         return;
@@ -36,11 +38,53 @@ export async function costumeScraperAsync(outputPath?: string) {
     const links = $(".page table>tbody>tr>td>b>a")
       .toArray()
       .map((e) => $(e).attr("href"));
-    const costumes = [];
+    let costumes: Costume[];
+    if (old) {
+      costumes = old.data;
+    } else {
+      costumes = [];
+    }
     for (let link of links) {
+      if (costumes.findIndex((v) => v.uri === link) > 0) continue;
       const item = await scrapeItemAsync(link);
       costumes.push(item);
     }
+    // 固定のリスト（歌姫リスト）を先に作ってからidはそっちで決定したい
+    const divas = Array.from(new Set(costumes.map((m) => m.diva)));
+    const divaIdMap = new Map(divas.map((m, i) => [m, i + 1]));
+    // 初期衣装をid1に固定したいので2からはじめる
+    const divaMap = new Map(
+      divas.map((m) => {
+        let count = 0;
+        if (old) {
+          count = old.data.filter((f) => f.diva === m).length;
+        }
+        return [m, count === 0 ? 2 : count + 1];
+      })
+    );
+
+    // 基本的には更新日時順だが、初期には同じ日付の物もあるので元の表の並び順も保持したい
+    costumes = costumes.sort((a, b) =>
+      new Date(a.lastUpdated) < new Date(b.lastUpdated) ? -1 : 1
+    );
+
+    for (let item of costumes) {
+      // 既にidを持ってるのはスキップ
+      if (item.id !== "") continue;
+
+      let id: number;
+      // 初期衣装の更新日がなんかおかしいので無理矢理1にする
+      if (item.howToGet === "最初から所持") {
+        // もし、新規歌姫が追加されて最初から所持している衣装が2着以上あったらid1が被るけど、多分ない
+        id = 1;
+      } else {
+        id = divaMap.get(item.diva);
+        divaMap.set(item.diva, id + 1);
+      }
+      item.id =
+        ("0" + divaIdMap.get(item.diva)).slice(-2) + ("000" + id).slice(-4);
+    }
+    costumes = costumes.sort((a, b) => parseInt(a.id) - parseInt(b.id));
     const result = {
       url,
       data: costumes,
@@ -73,15 +117,17 @@ async function scrapeItemAsync(uri: string) {
       effect = effectMatch[1];
     }
     const lastUpdated = $(".page .last-updated time").text();
+    // idは後から入れる
     return {
+      id: "",
       uri,
       name,
       diva,
-      image,
-      howToGet,
       effect,
+      howToGet,
+      image,
       lastUpdated,
-    };
+    } as Costume;
   } catch (error) {
     throw error;
   }
