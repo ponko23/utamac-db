@@ -1,7 +1,12 @@
-import { ScrapeData } from "./scraper";
+import { ScrapeData, baseUrl } from "./scraper";
 import cheerio from "cheerio";
 import fs from "fs";
 import rp from "request-promise";
+
+const url =
+  "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
+
+const fileName = "costumes.json";
 
 export interface Costume {
   id: string;
@@ -13,11 +18,7 @@ export interface Costume {
   image: string;
   lastUpdated: string;
 }
-const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
-const url =
-  "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
 
-const fileName = "costumes.json";
 export async function costumeScraperAsync(outputPath?: string) {
   try {
     const filePath = outputPath + fileName;

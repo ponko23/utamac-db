@@ -1,5 +1,4 @@
 import { costumeScraperAsync } from "./costume";
-import { ScrapeData } from "./scraper";
 
 async function mainAsync() {
   try {
