@@ -1,3 +1,6 @@
+import fs from "fs";
+import rp from "request-promise";
+
 export const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
 
 /**

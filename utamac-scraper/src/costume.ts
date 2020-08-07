@@ -1,4 +1,6 @@
 import { ScrapeData, baseUrl } from "./scraper";
+import { generateUrl } from "./utility";
+import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
 import rp from "request-promise";
@@ -24,13 +26,14 @@ export async function costumeScraperAsync(outputPath?: string) {
     const filePath = outputPath + fileName;
     const html = await rp(url);
     const $ = cheerio.load(html);
-    const lastUpdated = $(".last-updated time").first().html();
+    const lastUpdated = $(".last-updated time").first().text();
+    if (lastUpdated === UpdateHistories.histories.get(url)) return;
     let old: ScrapeData<Costume[]>;
     if (fs.existsSync(filePath)) {
       const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
       old = JSON.parse(oldJson) as ScrapeData<Costume[]>;
       if (old.lastUpdated === lastUpdated) {
-        console.log(this.fileName + " : 取得済み");
+        console.log(fileName + " : 取得済み");
         return;
       }
     }
@@ -94,15 +97,19 @@ export async function costumeScraperAsync(outputPath?: string) {
     const json = JSON.stringify(result);
 
     fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+    UpdateHistories.histories.set(url, lastUpdated);
   } catch (error) {
-    throw error;
+    UpdateHistories.histories.set(url, error.message);
   }
 }
 
 async function scrapeItemAsync(uri: string) {
+  const itemUrl = generateUrl(baseUrl, uri);
   try {
-    const html = await rp(baseUrl + uri);
+    const html = await rp(itemUrl);
     const $ = cheerio.load(html);
+    const lastUpdated = $(".page .last-updated time").text();
+    if (lastUpdated === UpdateHistories.histories.get(url)) return;
     const name = $(".page h1").text();
     const image = $(".page img").first().attr("src");
     const rows = $(".page table>tbody>tr");
@@ -117,9 +124,8 @@ async function scrapeItemAsync(uri: string) {
     if (effectMatch) {
       effect = effectMatch[1];
     }
-    const lastUpdated = $(".page .last-updated time").text();
     // idは後から入れる
-    return {
+    const result = {
       id: "",
       uri,
       name,
@@ -129,7 +135,9 @@ async function scrapeItemAsync(uri: string) {
       image,
       lastUpdated,
     } as Costume;
+    UpdateHistories.histories.set(itemUrl, lastUpdated);
+    return result;
   } catch (error) {
-    throw error;
+    UpdateHistories.histories.set(itemUrl, error.message);
   }
 }

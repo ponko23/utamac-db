@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.costumeScraperAsync = void 0;
+const scraper_1 = require("./scraper");
+const utility_1 = require("./utility");
+const updatehistory_1 = __importDefault(require("./updatehistory"));
 const cheerio_1 = __importDefault(require("cheerio"));
 const fs_1 = __importDefault(require("fs"));
 const request_promise_1 = __importDefault(require("request-promise"));
-const baseUrl = "https://xn--pckua3ipc5705b.gamematome.jp";
 const url = "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
 const fileName = "costumes.json";
 async function costumeScraperAsync(outputPath) {
@@ -15,13 +17,15 @@ async function costumeScraperAsync(outputPath) {
         const filePath = outputPath + fileName;
         const html = await request_promise_1.default(url);
         const $ = cheerio_1.default.load(html);
-        const lastUpdated = $(".last-updated time").first().html();
+        const lastUpdated = $(".last-updated time").first().text();
+        if (lastUpdated === updatehistory_1.default.histories.get(url))
+            return;
         let old;
         if (fs_1.default.existsSync(filePath)) {
             const oldJson = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
             old = JSON.parse(oldJson);
             if (old.lastUpdated === lastUpdated) {
-                console.log(this.fileName + " : 取得済み");
+                console.log(fileName + " : 取得済み");
                 return;
             }
         }
@@ -80,16 +84,21 @@ async function costumeScraperAsync(outputPath) {
         };
         const json = JSON.stringify(result);
         fs_1.default.writeFileSync(filePath, json, { encoding: "utf-8" });
+        updatehistory_1.default.histories.set(url, lastUpdated);
     }
     catch (error) {
-        throw error;
+        updatehistory_1.default.histories.set(url, error.message);
     }
 }
 exports.costumeScraperAsync = costumeScraperAsync;
 async function scrapeItemAsync(uri) {
+    const itemUrl = utility_1.generateUrl(scraper_1.baseUrl, uri);
     try {
-        const html = await request_promise_1.default(baseUrl + uri);
+        const html = await request_promise_1.default(itemUrl);
         const $ = cheerio_1.default.load(html);
+        const lastUpdated = $(".page .last-updated time").text();
+        if (lastUpdated === updatehistory_1.default.histories.get(url))
+            return;
         const name = $(".page h1").text();
         const image = $(".page img").first().attr("src");
         const rows = $(".page table>tbody>tr");
@@ -104,9 +113,8 @@ async function scrapeItemAsync(uri) {
         if (effectMatch) {
             effect = effectMatch[1];
         }
-        const lastUpdated = $(".page .last-updated time").text();
         // idは後から入れる
-        return {
+        const result = {
             id: "",
             uri,
             name,
@@ -116,9 +124,11 @@ async function scrapeItemAsync(uri) {
             image,
             lastUpdated,
         };
+        updatehistory_1.default.histories.set(itemUrl, lastUpdated);
+        return result;
     }
     catch (error) {
-        throw error;
+        updatehistory_1.default.histories.set(itemUrl, error.message);
     }
 }
 //# sourceMappingURL=costume.js.map
