@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { Plate, platePopupState } from "../atoms/plate";
+import { platePopupState } from "../atoms/plate";
 import {
   Dialog,
   Button,
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton,
   Typography,
   Theme,
-  createStyles,
-  WithStyles,
   withStyles,
   TableContainer,
   Paper,
@@ -20,23 +17,7 @@ import {
   TableCell,
   TableBody,
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 import { useRecoilState } from "recoil";
-import classes from "*.module.css";
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      margin: 0,
-      padding: theme.spacing(2),
-    },
-    closeButton: {
-      position: "absolute",
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
-    },
-  });
 
 const StyledDialogContent = withStyles((theme: Theme) => ({
   root: {
@@ -80,6 +61,7 @@ export const PlatePopup = () => {
                     if (platePopup.image.length === 1) return;
                     setImageState(!imageState);
                   }}
+                  alt=""
                 />
               </div>
               <TableContainer component={Paper}>
