@@ -28,7 +28,7 @@ export const PlateList = (props: PlateListProps) => {
   return (
     <Grid container className={classes.root} spacing={1}>
       {plates.map((p) => (
-        <Grid item key={p.Id} className={classes.item}>
+        <Grid item key={p.id} className={classes.item}>
           <PlateCard plate={p} />
         </Grid>
       ))}

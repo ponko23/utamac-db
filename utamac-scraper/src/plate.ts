@@ -1,5 +1,6 @@
 import { ScrapeData, baseUrl } from "./scraper";
-import { transpose, scrapeSetUp, generateUrl } from "./utility";
+import { transpose, generateUrl } from "./utility";
+import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
 import rp from "request-promise";
@@ -85,7 +86,7 @@ export interface Plate {
 }
 
 export async function plateScraperAsync(outputPath?: string) {
-  await scrapeSetUp(url, async ($, lastUpdated) => {
+  return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
       const filePath = outputPath + fileName;
       let old: ScrapeData<Plate[]>;
@@ -181,6 +182,7 @@ export async function plateScraperAsync(outputPath?: string) {
         lastUpdated,
       } as ScrapeData<Plate[]>;
       fs.writeFileSync(filePath, JSON.stringify(result), { encoding: "utf-8" });
+      return result;
     } catch (error) {
       throw error;
     }
@@ -201,7 +203,7 @@ async function getPlateUriByCategoryAsync(url: string) {
 
 async function scrapeItemAsync(uri: string) {
   const itemUrl = generateUrl(baseUrl, uri);
-  return await scrapeSetUp(itemUrl, async ($, lastUpdated) => {
+  return await UpdateHistories.usingHistory(itemUrl, async ($, lastUpdated) => {
     try {
       const page = $("div.page");
       const name = page.find("h1").text();
@@ -278,7 +280,9 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
       .find("table tr")
       .toArray();
     const name = $(skillRows[0]).find("td>b>a").text();
-    const results = skillRows.slice(1).map((m) => {
+    const limit = $(skillRows[1]).find("td[colspan]>b")?.text();
+    const skip = limit && limit !== "" ? 2 : 1;
+    const results = skillRows.slice(skip).map((m) => {
       const matched = $(m)
         .find("td:last-child")
         .text()
@@ -289,7 +293,7 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
         return {
           name,
           rank: array[0],
-          conditions: array[1],
+          conditions: array[1] + limit,
         } as Skill;
       });
     });

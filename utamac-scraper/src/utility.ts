@@ -3,6 +3,10 @@ import rp from "request-promise";
 import cheerio from "cheerio";
 import UpdateHistories from "./updatehistory";
 
+/**
+ * URLを安全に連結する。オブジェクトが渡されるとquery parameterとして組み立てて連結する
+ * @param param
+ */
 export function generateUrl(...param: any[]) {
   if (!param || param.length < 1 || typeof param[0] !== "string")
     throw new Error("URL生成に失敗しました。");
@@ -27,13 +31,31 @@ export function generateUrl(...param: any[]) {
     } else {
       url = url.replace(/$[\?\/]/, "");
       for (const [key, value] of param[i]) {
-        url += `${i === 1 ? "?" : "&"}${key}=${value}`;
+        url += `${hasQuery ? "&" : "?"}${key}=${value}`;
+        if (!hasQuery) hasQuery = true;
       }
     }
   }
   return url;
 }
 
+/**
+ * URLの最後のuriを取得する
+ * @param url
+ */
+export function getLastUri(url: string): string {
+  const array = url.split("/");
+  for (const uri of array.reverse()) {
+    if (uri !== "") return uri;
+  }
+  return "";
+}
+
+/**
+ * 指定URLのhtmlを引数の関数を用いて解析して取得履歴に追加する
+ * @param url 解析対象URL
+ * @param func 解析処理本体
+ */
 export async function scrapeSetUp<T>(
   url: string,
   func: ($: CheerioStatic, lastUpdated: string) => Promise<T>
@@ -43,6 +65,12 @@ export async function scrapeSetUp<T>(
     const $ = cheerio.load(html);
     const lastUpdated = $(".page .last-updated time").text();
     if (lastUpdated === UpdateHistories.histories.get(url)) return;
+    if (UpdateHistories.useCache) {
+      // 保存はできるけど、保存しているものから読み込んで処理をする、という流れをどうしよう？
+      fs.writeFileSync(`./caches/${getLastUri(url)}.html`, html, {
+        encoding: "utf-8",
+      });
+    }
     const result = await func($, lastUpdated);
     UpdateHistories.histories.set(url, lastUpdated);
     return result;
@@ -51,6 +79,10 @@ export async function scrapeSetUp<T>(
   }
 }
 
+/**
+ * 2次元配列のx,y軸を入れ替える
+ * @param source
+ */
 export function transpose<T>(source: T[][]): T[][] {
   try {
     if (source === null || source.length === 0 || source[0].length === 0)

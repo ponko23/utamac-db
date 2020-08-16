@@ -7,10 +7,11 @@ import UpdateHistories from "./updatehistory";
 async function mainAsync() {
   try {
     const outputPath = "../utamac-db/src/resources/";
+    UpdateHistories.useCache = false; // 上手くいかない
     UpdateHistories.load(outputPath);
-    //await scrapeDivasAsync(outputPath);
-    //await scrapeEpisodesAsync(outputPath);
-    //await scrapeCostumesAsync(outputPath);
+    await scrapeDivasAsync(outputPath);
+    await scrapeEpisodesAsync(outputPath);
+    await scrapeCostumesAsync(outputPath);
     await scrapePlatesAsync(outputPath);
     UpdateHistories.save(outputPath);
   } catch (error) {

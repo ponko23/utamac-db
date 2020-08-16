@@ -34,55 +34,57 @@ export interface Diva {
 }
 
 export async function divaScraperAsync(outputPath?: string) {
-  try {
-    const filePath = outputPath + fileName;
-    const html = await rp(url);
-    const $ = cheerio.load(html);
-    const lastUpdated = $(".last-updated time").first().text();
-    if (lastUpdated === UpdateHistories.histories.get(url)) return;
-    let old: ScrapeData<Diva[]>;
-    if (fs.existsSync(filePath)) {
-      const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
-      old = JSON.parse(oldJson) as ScrapeData<Diva[]>;
-      if (old.lastUpdated === lastUpdated) {
-        console.log(fileName + " : 取得済み");
-        return;
+  return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
+    try {
+      const filePath = outputPath + fileName;
+      const html = await rp(url);
+      const $ = cheerio.load(html);
+      const lastUpdated = $(".last-updated time").first().text();
+      if (lastUpdated === UpdateHistories.histories.get(url)) return;
+      let old: ScrapeData<Diva[]>;
+      if (fs.existsSync(filePath)) {
+        const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
+        old = JSON.parse(oldJson) as ScrapeData<Diva[]>;
+        if (old.lastUpdated === lastUpdated) {
+          console.log(fileName + " : 取得済み");
+          return;
+        }
       }
-    }
 
-    // headerを飛ばす
-    const icons = $(".page table>tbody>tr>td>a>img")
-      .toArray()
-      .map((e) => $(e).attr("src"));
-    const links = $(".page table>tbody>tr>td>b>a")
-      .toArray()
-      .map((e) => $(e).attr("href"));
-    let divas: Diva[];
-    if (old) {
-      divas = old.data;
-    } else {
-      divas = [];
-    }
-    for (let i = 0; i < links.length; i++) {
-      if (divas.findIndex((v) => v.uri === links[i]) > 0) continue;
-      const item = await scrapeItemAsync(links[i]);
-      if (item === null) continue;
-      item.icon = icons[i];
-      item.id = ("0" + (i + 1)).slice(-2);
-      divas.push(item);
-    }
-    const result = {
-      url,
-      data: divas,
-      lastUpdated,
-    } as ScrapeData<Diva[]>;
-    const json = JSON.stringify(result);
+      // headerを飛ばす
+      const icons = $(".page table>tbody>tr>td>a>img")
+        .toArray()
+        .map((e) => $(e).attr("src"));
+      const links = $(".page table>tbody>tr>td>b>a")
+        .toArray()
+        .map((e) => $(e).attr("href"));
+      let divas: Diva[];
+      if (old) {
+        divas = old.data;
+      } else {
+        divas = [];
+      }
+      for (let i = 0; i < links.length; i++) {
+        if (divas.findIndex((v) => v.uri === links[i]) > 0) continue;
+        const item = await scrapeItemAsync(links[i]);
+        if (item === null) continue;
+        item.icon = icons[i];
+        item.id = ("0" + (i + 1)).slice(-2);
+        divas.push(item);
+      }
+      const result = {
+        url,
+        data: divas,
+        lastUpdated,
+      } as ScrapeData<Diva[]>;
+      const json = JSON.stringify(result);
 
-    fs.writeFileSync(filePath, json, { encoding: "utf-8" });
-    UpdateHistories.histories.set(url, lastUpdated);
-  } catch (error) {
-    throw error;
-  }
+      fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+      UpdateHistories.histories.set(url, lastUpdated);
+    } catch (error) {
+      throw error;
+    }
+  });
 }
 const divaSeriesMap = new Map([
   [

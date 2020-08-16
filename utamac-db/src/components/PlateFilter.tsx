@@ -2,10 +2,12 @@ import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   plateFilterSettingState,
+  centerSkillListState,
+  activeSkillListState,
   liveSkillListState,
   defaultRalities,
-  defaultTypes,
-  defaultEffectiveDivas,
+  defaultAttributes,
+  defaultCompatibleDivas,
   plateFilterState,
 } from "../atoms/plate";
 import { ToggleButton } from "@material-ui/lab";
@@ -103,6 +105,8 @@ export const PlateFilter = (props: PlateFilterProps) => {
   // const [effectiveDivaFilter, setEffectiveDivaFilter] = useRecoilState(
   //   plateEffectiveDivaState
   // );
+  const centerSkillList = useRecoilValue(centerSkillListState);
+  const activeSkillList = useRecoilValue(activeSkillListState);
   const liveSkillList = useRecoilValue(liveSkillListState);
 
   const generateRalityFilter = () => {
@@ -133,9 +137,9 @@ export const PlateFilter = (props: PlateFilterProps) => {
     return results;
   };
 
-  const generateTypeFilter = () => {
+  const generateAttributeFilter = () => {
     let results: JSX.Element[] = [];
-    filter.type.forEach((v, k) => {
+    filter.attribute.forEach((v, k) => {
       results.push(
         <ToggleButton
           key={"type" + k}
@@ -143,7 +147,7 @@ export const PlateFilter = (props: PlateFilterProps) => {
           selected={v}
           onChange={() =>
             setFilter((f) => {
-              return { ...f, type: f.type.set(k, !v) };
+              return { ...f, attribute: f.attribute.set(k, !v) };
             })
           }
           style={{ padding: 0, margin: 1 }}
@@ -155,9 +159,9 @@ export const PlateFilter = (props: PlateFilterProps) => {
     return results;
   };
 
-  const generateEffectiveDivaFilter = () => {
+  const generateCompatibleDivaFilter = () => {
     let results: JSX.Element[] = [];
-    filter.effectiveDiva.forEach((v, k) => {
+    filter.compatibleDiva.forEach((v, k) => {
       results.push(
         <ToggleButton
           key={"diva" + (results.length + 1)}
@@ -165,7 +169,7 @@ export const PlateFilter = (props: PlateFilterProps) => {
           selected={v}
           onChange={() =>
             setFilter((f) => {
-              return { ...f, effectiveDiva: f.effectiveDiva.set(k, !v) };
+              return { ...f, compatibleDiva: f.compatibleDiva.set(k, !v) };
             })
           }
           style={{ padding: 0, marginLeft: 1 }}
@@ -227,13 +231,49 @@ export const PlateFilter = (props: PlateFilterProps) => {
                 value={"all"}
                 onChange={() =>
                   setFilter((f) => {
-                    return { ...f, type: new Map(defaultTypes) };
+                    return { ...f, attribute: new Map(defaultAttributes) };
                   })
                 }
               >
                 ALL
               </ToggleButton>
-              {generateTypeFilter()}
+              {generateAttributeFilter()}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Typography variant="subtitle2">センタースキル</Typography>
+              <select
+                value={filter.centerSkill}
+                onChange={(e) =>
+                  setFilter((f) => {
+                    return { ...f, centerSkill: e.currentTarget.value };
+                  })
+                }
+              >
+                <option value={""}></option>
+                {centerSkillList.map((l, i) => (
+                  <option key={"centerSkill" + i} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Typography variant="subtitle2">アクティブスキル</Typography>
+              <select
+                value={filter.activeSkill}
+                onChange={(e) =>
+                  setFilter((f) => {
+                    return { ...f, activeSkill: e.currentTarget.value };
+                  })
+                }
+              >
+                <option value={""}></option>
+                {activeSkillList.map((l, i) => (
+                  <option key={"activeSkill" + i} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </select>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2">ライブスキル</Typography>
@@ -247,7 +287,7 @@ export const PlateFilter = (props: PlateFilterProps) => {
               >
                 <option value={""}></option>
                 {liveSkillList.map((l, i) => (
-                  <option key={"skill" + i} value={l}>
+                  <option key={"liveSkill" + i} value={l}>
                     {l}
                   </option>
                 ))}
@@ -269,14 +309,14 @@ export const PlateFilter = (props: PlateFilterProps) => {
                   setFilter((f) => {
                     return {
                       ...f,
-                      effectiveDiva: new Map(defaultEffectiveDivas),
+                      compatibleDiva: new Map(defaultCompatibleDivas),
                     };
                   })
                 }
               >
                 ALL
               </ToggleButton>
-              {generateEffectiveDivaFilter()}
+              {generateCompatibleDivaFilter()}
             </Grid>
           </Grid>
         </AccordionDetails>

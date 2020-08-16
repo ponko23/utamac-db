@@ -16,7 +16,7 @@ function PersistenceObserver() {
     // TODO : どのatomが更新されたかわからないので、毎回全部保存してるのでどうにかしたい
 
     var favs = snapshot.getLoadable(favsState).contents;
-    var favsJson = JSON.stringify(Array.from(favs as Map<number, boolean>));
+    var favsJson = JSON.stringify(Array.from(favs as Map<string, boolean>));
     if (localStorage.getItem(favsState.key) !== favsJson) {
       localStorage.setItem(favsState.key, favsJson);
     }
@@ -30,20 +30,28 @@ function PersistenceObserver() {
       localStorage.setItem("plateRality", ralityJson);
     }
 
-    var type = Array.from(filter.type as Map<string, boolean>);
+    var type = Array.from(filter.attribute as Map<string, boolean>);
     var typeJson = JSON.stringify(type);
-    if (localStorage.getItem("plateType") !== typeJson) {
-      localStorage.setItem("plateType", typeJson);
+    if (localStorage.getItem("plateAttribute") !== typeJson) {
+      localStorage.setItem("plateAttribute", typeJson);
     }
 
     var effectiveDiva = Array.from(
-      filter.effectiveDiva as Map<string, boolean>
+      filter.compatibleDiva as Map<string, boolean>
     );
     var effectiveDivaJson = JSON.stringify(effectiveDiva);
-    if (localStorage.getItem("plateEffectiveDiva") !== effectiveDivaJson) {
-      localStorage.setItem("plateEffectiveDiva", effectiveDivaJson);
+    if (localStorage.getItem("plateCompatibleDiva") !== effectiveDivaJson) {
+      localStorage.setItem("plateCompatibleDiva", effectiveDivaJson);
     }
 
+    var centerSkill = filter.centerSkill;
+    if (localStorage.getItem("centerSkill") !== centerSkill) {
+      localStorage.setItem("centerSkill", centerSkill);
+    }
+    var activeSkill = filter.activeSkill;
+    if (localStorage.getItem("activeSkill") !== activeSkill) {
+      localStorage.setItem("activeSkill", activeSkill);
+    }
     var liveSkill = filter.liveSkill;
     if (localStorage.getItem("liveSkill") !== liveSkill) {
       localStorage.setItem("liveSkill", liveSkill);

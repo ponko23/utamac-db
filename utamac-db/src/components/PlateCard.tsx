@@ -13,7 +13,7 @@ export const PlateCard = (props: PlateCardProps) => {
   const [released, setReleased] = useState(false);
   const [favs, setFavs] = useRecoilState(favsState);
   const onChangeRality = () => {
-    if (plate.InitialRarity === plate.MaxRarity) return;
+    if (plate.rality.length === 1) return;
     setReleased(!released);
   };
 
@@ -31,13 +31,13 @@ export const PlateCard = (props: PlateCardProps) => {
   };
 
   const onOpenDetail = (plate: Plate) => {};
-  const onFavChange = (id: number) => {
+  const onFavChange = (id: string) => {
     let fav = favs.get(id);
     if (fav === undefined) {
       setFavs((f) => {
         return f.set(id, false);
       });
-    } else if (!fav && plate.InitialRarity !== plate.MaxRarity) {
+    } else if (!fav && plate.rality.length !== 1) {
       setFavs((f) => {
         return f.set(id, true);
       });
@@ -54,24 +54,26 @@ export const PlateCard = (props: PlateCardProps) => {
       style={{
         margin: 2,
         padding: 5,
-        background: getPlateColor(plate.Attribute),
+        background: getPlateColor(plate.attribute),
       }}
     >
       <div style={{ clear: "left" }}>
-        <h4 style={{ width: "95%", margin: 0, float: "left" }}>{plate.Name}</h4>
+        <h4 style={{ width: "95%", margin: 0, float: "left" }}>{plate.name}</h4>
         <span
           style={{
             float: "left",
-            color: favs.get(plate.Id) ? "purple" : "black",
+            color: favs.get(plate.id) ? "purple" : "black",
           }}
-          onClick={() => onFavChange(plate.Id)}
+          onClick={() => onFavChange(plate.id)}
         >
-          {favs.get(plate.Id) !== undefined ? "★" : "☆"}
+          {favs.get(plate.id) !== undefined ? "★" : "☆"}
         </span>
       </div>
       <img
-        src={released ? plate.ReleasedImage : plate.InitialImage}
-        alt={plate.Name}
+        src={
+          released && plate.image.length > 1 ? plate.image[1] : plate.image[0]
+        }
+        alt={plate.name}
         style={{ width: "65%", float: "left" }}
         onClick={onChangeRality}
       />
@@ -84,17 +86,26 @@ export const PlateCard = (props: PlateCardProps) => {
             marginLeft: 5,
           }}
         >
-          <li>Total:{plate.MaxTotal}</li>
-          <li>Voice:{plate.MaxVoice}</li>
-          <li>Soul: {plate.MaxSoul}</li>
-          <li>Charm:{plate.MaxCharm}</li>
+          <li>Total:{plate.status[1].total}</li>
+          <li>Voice:{plate.status[1].voice}</li>
+          <li>Soul: {plate.status[1].soul}</li>
+          <li>Charm:{plate.status[1].charm}</li>
         </ul>
       </div>
       <div style={{ clear: "left" }}>
         <ul style={{ listStyle: "none", float: "left", paddingLeft: 0 }}>
-          <li>Center:{plate.CenterSkill}</li>
-          <li>Active:{plate.ActiveSkill}</li>
-          <li>Live :{plate.LiveSkill}</li>
+          <li>
+            Center:{plate.centerSkill.flat()[0]?.name}{" "}
+            {plate.centerSkill.flat()[0]?.rank}
+          </li>
+          <li>
+            Active:{plate.activeSkill.flat()[0]?.name}{" "}
+            {plate.activeSkill.flat()[0]?.rank}
+          </li>
+          <li>
+            Live :{plate.liveSkill.flat()[0]?.name}{" "}
+            {plate.liveSkill.flat()[0]?.rank}
+          </li>
         </ul>
         <div style={{ clear: "left" }}>
           <button onClick={() => onOpenDetail(plate)} style={{ width: "100%" }}>
