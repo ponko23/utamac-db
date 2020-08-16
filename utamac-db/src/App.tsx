@@ -10,6 +10,7 @@ import {
   PlateFilterSetting,
 } from "./atoms/plate";
 import { Container, Divider } from "@material-ui/core";
+import { PlatePopup } from "./components/PlatePopup";
 
 function PersistenceObserver() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
@@ -70,6 +71,7 @@ function App() {
         style={{ paddingLeft: 2, paddingRight: 2, marginBottom: 2 }}
       >
         <PlateFilter />
+        <PlatePopup />
         <PlatePagination />
         <Divider />
         <PlateList />

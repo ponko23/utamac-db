@@ -1,5 +1,5 @@
 import { ScrapeData, baseUrl } from "./scraper";
-import { transpose, generateUrl } from "./utility";
+import utility from "./utility";
 import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
@@ -85,7 +85,7 @@ export interface Plate {
   lastUpdated: string;
 }
 
-export async function plateScraperAsync(outputPath?: string) {
+export default async function plateScraperAsync(outputPath?: string) {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
       const filePath = outputPath + fileName;
@@ -202,7 +202,7 @@ async function getPlateUriByCategoryAsync(url: string) {
 }
 
 async function scrapeItemAsync(uri: string) {
-  const itemUrl = generateUrl(baseUrl, uri);
+  const itemUrl = utility.generateUrl(baseUrl, uri);
   return await UpdateHistories.usingHistory(itemUrl, async ($, lastUpdated) => {
     try {
       const page = $("div.page");
@@ -298,7 +298,7 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
       });
     });
     // [スキル1[初期, LvMax, 変化後初期, 変化後LvMax], スキル2[...]] という形に持ちたいので
-    return transpose(results);
+    return utility.transpose(results);
   } catch (error) {
     throw error;
   }

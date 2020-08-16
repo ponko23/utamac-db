@@ -1,7 +1,7 @@
 import fs from "fs";
 import rp from "request-promise";
 import cheerio from "cheerio";
-import { getLastUri } from "./utility";
+import utility from "./utility";
 
 class UpdateHistories {
   public histories: Map<string, string>;
@@ -34,7 +34,7 @@ class UpdateHistories {
       let html: string = "";
       let hasCache: boolean = false;
       if (this.useCache) {
-        const cacheFileName = `./caches/${getLastUri(url)}.html`;
+        const cacheFileName = `./caches/${utility.getLastUri(url)}.html`;
         if (fs.existsSync(cacheFileName)) {
           html = fs.readFileSync(cacheFileName, { encoding: "utf-8" });
           hasCache = true;
@@ -49,7 +49,7 @@ class UpdateHistories {
       // キャッシュ取って解析終われば履歴に同じ日時で記録されるから、意味がない？
       if (lastUpdated === this.histories.get(url)) return;
       if (this.useCache && !hasCache) {
-        fs.writeFileSync(`./caches/${getLastUri(url)}.html`, html, {
+        fs.writeFileSync(`./caches/${utility.getLastUri(url)}.html`, html, {
           encoding: "utf-8",
         });
         hasCache = true;

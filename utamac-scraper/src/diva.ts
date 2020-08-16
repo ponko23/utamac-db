@@ -33,7 +33,7 @@ export interface Diva {
   lastUpdated: string;
 }
 
-export async function divaScraperAsync(outputPath?: string) {
+export default async function divaScraperAsync(outputPath?: string) {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
       const filePath = outputPath + fileName;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Plate, favsState } from "../atoms/plate";
-import { useRecoilState } from "recoil";
+import { Plate, favsState, platePopupState } from "../atoms/plate";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Paper } from "@material-ui/core";
 
 export type PlateCardProps = {
@@ -12,6 +12,7 @@ export const PlateCard = (props: PlateCardProps) => {
   var plate = props.plate;
   const [released, setReleased] = useState(false);
   const [favs, setFavs] = useRecoilState(favsState);
+  const setPlatePopup = useSetRecoilState(platePopupState);
   const onChangeRality = () => {
     if (plate.rality.length === 1) return;
     setReleased(!released);
@@ -30,7 +31,9 @@ export const PlateCard = (props: PlateCardProps) => {
     }
   };
 
-  const onOpenDetail = (plate: Plate) => {};
+  const onOpenDetail = (plate: Plate) => {
+    setPlatePopup(plate);
+  };
   const onFavChange = (id: string) => {
     let fav = favs.get(id);
     if (fav === undefined) {

@@ -35,47 +35,6 @@ export interface Plate {
   lastUpdated: string;
 }
 
-// export interface Plate {
-//   Id: number;
-//   Url: string;
-//   Name: string;
-//   InitialRarity: number;
-//   MaxRarity: number;
-//   Attribute: string;
-//   InitialImage: string;
-//   ReleasedImage: string;
-//   Episod: string;
-//   CenterSkill: string;
-//   CenterSkillCondition: string;
-//   ActiveSkill: string;
-//   ActiveSkillCondition: string;
-//   LiveSkill: string;
-//   LiveSkillCondition: string;
-//   EffectiveDiva: string[];
-//   InitialTotal: number;
-//   MaxTotal: number;
-//   InitialSoul: number;
-//   MaxSoul: number;
-//   InitialVoice: number;
-//   MaxVoice: number;
-//   InitialCharm: number;
-//   MaxCharm: number;
-//   InitialLife: number;
-//   MaxLife: number;
-//   InitialSuport: number;
-//   MaxSuport: number;
-//   InitialForldWave: number;
-//   MaxForldWave: number;
-//   MaxLuck: number;
-//   ExpectedLife: number;
-//   ExpectedScore: number;
-//   ExpectedItem: number;
-//   ExpectedForldWave: number;
-//   ExpectedAttack: number;
-//   Discription: string;
-//   Error: [];
-// }
-
 const initialPlates: Plate[] = plates.data;
 
 export const plateState = atom({
@@ -91,6 +50,7 @@ export const centerSkillListState = atom({
         .flatMap((f) => f.centerSkill)
         .flat()
         .map((m) => m.name)
+        .sort()
     )
   ),
 });
@@ -103,6 +63,7 @@ export const activeSkillListState = atom({
         .flatMap((f) => f.activeSkill)
         .flat()
         .map((m) => m.name)
+        .sort()
     )
   ),
 });
@@ -115,6 +76,7 @@ export const liveSkillListState = atom({
         .flatMap((f) => f.liveSkill)
         .flat()
         .map((m) => m.name)
+        .sort()
     )
   ),
 });
@@ -343,4 +305,11 @@ export const pagedPlateState = selector({
       paging.numberOf * current
     );
   },
+});
+
+const initialPlatePopup: Plate | null = null;
+
+export const platePopupState = atom<Plate | null>({
+  key: "platePopup",
+  default: initialPlatePopup,
 });

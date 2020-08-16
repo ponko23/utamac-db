@@ -1,5 +1,5 @@
 import { ScrapeData, baseUrl } from "./scraper";
-import { generateUrl } from "./utility";
+import utility from "./utility";
 import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
@@ -21,7 +21,7 @@ export interface Costume {
   lastUpdated: string;
 }
 
-export async function costumeScraperAsync(outputPath?: string) {
+export default async function costumeScraperAsync(outputPath?: string) {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
       const filePath = outputPath + fileName;
@@ -106,7 +106,7 @@ export async function costumeScraperAsync(outputPath?: string) {
 }
 
 async function scrapeItemAsync(uri: string) {
-  const itemUrl = generateUrl(baseUrl, uri);
+  const itemUrl = utility.generateUrl(baseUrl, uri);
   try {
     const html = await rp(itemUrl);
     const $ = cheerio.load(html);

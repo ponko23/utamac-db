@@ -18,7 +18,7 @@ export interface Episode {
   lastUpdated: string;
 }
 
-export async function episodeScraperAsync(outputPath?: string) {
+export default async function episodeScraperAsync(outputPath?: string) {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
       const filePath = outputPath + fileName;
