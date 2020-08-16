@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/game-db/static/js/main.5a5a24f1.chunk.js",
-    "main.js.map": "/game-db/static/js/main.5a5a24f1.chunk.js.map",
+    "main.js": "/game-db/static/js/main.0865c8b3.chunk.js",
+    "main.js.map": "/game-db/static/js/main.0865c8b3.chunk.js.map",
     "runtime-main.js": "/game-db/static/js/runtime-main.caf88c50.js",
     "runtime-main.js.map": "/game-db/static/js/runtime-main.caf88c50.js.map",
-    "static/js/2.90388c09.chunk.js": "/game-db/static/js/2.90388c09.chunk.js",
-    "static/js/2.90388c09.chunk.js.map": "/game-db/static/js/2.90388c09.chunk.js.map",
+    "static/js/2.69117e77.chunk.js": "/game-db/static/js/2.69117e77.chunk.js",
+    "static/js/2.69117e77.chunk.js.map": "/game-db/static/js/2.69117e77.chunk.js.map",
     "index.html": "/game-db/index.html",
-    "precache-manifest.a8c4214a02c5ca1b6ced2bfb820a54ac.js": "/game-db/precache-manifest.a8c4214a02c5ca1b6ced2bfb820a54ac.js",
+    "precache-manifest.2bec17b934aa1d0c2f3f123e281d5370.js": "/game-db/precache-manifest.2bec17b934aa1d0c2f3f123e281d5370.js",
     "service-worker.js": "/game-db/service-worker.js",
-    "static/js/2.90388c09.chunk.js.LICENSE.txt": "/game-db/static/js/2.90388c09.chunk.js.LICENSE.txt"
+    "static/js/2.69117e77.chunk.js.LICENSE.txt": "/game-db/static/js/2.69117e77.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.caf88c50.js",
-    "static/js/2.90388c09.chunk.js",
-    "static/js/main.5a5a24f1.chunk.js"
+    "static/js/2.69117e77.chunk.js",
+    "static/js/main.0865c8b3.chunk.js"
   ]
 }
