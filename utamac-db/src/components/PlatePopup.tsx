@@ -155,6 +155,33 @@ export const PlatePopup = () => {
                   </Table>
                 </TableContainer>
               )}
+              {platePopup.centerSkill[1]?.[1] && (
+                <TableContainer component={Paper}>
+                  <Table size="small" aria-label="a dense table">
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {platePopup.centerSkill[1][1].name}{" "}
+                          {platePopup.centerSkill[1][1].rank}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          {platePopup.centerSkill[1][1].effect}
+                          {platePopup.centerSkill[1][1].conditions && (
+                            <>
+                              <br />
+                              <span style={{ color: "red" }}>
+                                {platePopup.centerSkill[0][1].conditions}
+                              </span>
+                            </>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
               <Typography variant="subtitle2">アクティブ</Typography>
               {platePopup.activeSkill[0]?.[1] && (
                 <TableContainer component={Paper}>

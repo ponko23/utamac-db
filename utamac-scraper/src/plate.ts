@@ -288,12 +288,12 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
     const conditions = $(skillRows[1]).find("td[colspan]>b")?.text();
     const skip = conditions && conditions !== "" ? 2 : 1;
     const results = skillRows.slice(skip).map((m) => {
-      const matched = $(m)
-        .find("td:last-child")
-        .text()
-        .match(/[SABCD]+級：[^SABCD]*/g);
-      if (matched === null) return [];
-      return matched.map((m2) => {
+      const skills = $(m)
+        .find("td:last-child")[0]
+        .children.map((e) => $(e).text())
+        .filter((f) => f !== "");
+      if (skills === null || skills.length === 0) return [];
+      return skills.map((m2) => {
         const array = m2.split("級：");
         return {
           name,
