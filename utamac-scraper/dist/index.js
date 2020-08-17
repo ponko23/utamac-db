@@ -12,17 +12,19 @@ async function mainAsync() {
     try {
         const outputPath = "../utamac-db/src/resources/";
         updatehistory_1.default.setupResourcesPath(outputPath);
-        updatehistory_1.default.useCache = true; // 上手くいかない
+        updatehistory_1.default.useCache = false; // 上手くいかない
         updatehistory_1.default.load();
         await diva_1.default();
         await episode_1.default();
         await costume_1.default();
         await plate_1.default();
-        updatehistory_1.default.save();
     }
     catch (error) {
         console.log(Object.keys(error), error.message);
         throw error;
+    }
+    finally {
+        updatehistory_1.default.save();
     }
 }
 mainAsync().catch(console.error);

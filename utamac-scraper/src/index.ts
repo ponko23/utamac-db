@@ -8,7 +8,7 @@ async function mainAsync() {
   try {
     const outputPath = "../utamac-db/src/resources/";
     UpdateHistories.setupResourcesPath(outputPath);
-    UpdateHistories.useCache = true; // 上手くいかない
+    UpdateHistories.useCache = false; // 上手くいかない
     UpdateHistories.load();
     await divaScraperAsync();
     await episodeScraperAsync();
