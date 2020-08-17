@@ -9,7 +9,7 @@ import {
   plateFilterSettingState,
   PlateFilterSetting,
 } from "./atoms/plate";
-import { Container, Divider } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { PlatePopup } from "./components/PlatePopup";
 
 function PersistenceObserver() {
