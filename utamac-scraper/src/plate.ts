@@ -54,6 +54,7 @@ const fileName = "plates.json";
 export interface Skill {
   name: string;
   rank: string;
+  effect: string;
   conditions: string;
 }
 
@@ -85,14 +86,18 @@ export interface Plate {
   lastUpdated: string;
 }
 
-export default async function plateScraperAsync(outputPath?: string) {
+export default async function plateScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = outputPath + fileName;
+      const filePath = UpdateHistories.resourcesPath + fileName;
       let old: ScrapeData<Plate[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
         old = JSON.parse(oldJson) as ScrapeData<Plate[]>;
+        if (old.lastUpdated === lastUpdated) {
+          console.log(fileName + " : 取得済み");
+          return;
+        }
       }
       let plates: Map<string, Plate>;
       if (old) {
@@ -182,7 +187,6 @@ export default async function plateScraperAsync(outputPath?: string) {
         lastUpdated,
       } as ScrapeData<Plate[]>;
       fs.writeFileSync(filePath, JSON.stringify(result), { encoding: "utf-8" });
-      return result;
     } catch (error) {
       throw error;
     }
@@ -280,8 +284,9 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
       .find("table tr")
       .toArray();
     const name = $(skillRows[0]).find("td>b>a").text();
-    const limit = $(skillRows[1]).find("td[colspan]>b")?.text();
-    const skip = limit && limit !== "" ? 2 : 1;
+    // 二行目にスキル発動対象が書かれている場合がある
+    const conditions = $(skillRows[1]).find("td[colspan]>b")?.text();
+    const skip = conditions && conditions !== "" ? 2 : 1;
     const results = skillRows.slice(skip).map((m) => {
       const matched = $(m)
         .find("td:last-child")
@@ -293,7 +298,8 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
         return {
           name,
           rank: array[0],
-          conditions: array[1] + limit,
+          effect: array[1],
+          conditions,
         } as Skill;
       });
     });

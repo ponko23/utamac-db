@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { platePagingState, filteredPlateState } from "../atoms/plate";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
+import { Paper } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -41,15 +42,17 @@ export const PlatePagination = (props: PlatePaginationProps) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Pagination
-        count={pages}
-        size={"small"}
-        page={current}
-        variant="outlined"
-        shape="rounded"
-        onChange={handleChange}
-      />
-    </div>
+    <Paper>
+      <div className={classes.root}>
+        <Pagination
+          count={pages}
+          size={"small"}
+          page={current}
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+        />
+      </div>
+    </Paper>
   );
 };

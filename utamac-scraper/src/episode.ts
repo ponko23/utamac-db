@@ -18,14 +18,10 @@ export interface Episode {
   lastUpdated: string;
 }
 
-export default async function episodeScraperAsync(outputPath?: string) {
+export default async function episodeScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = outputPath + fileName;
-      const html = await rp(url);
-      const $ = cheerio.load(html);
-      const lastUpdated = $(".last-updated time").first().text();
-      if (lastUpdated === UpdateHistories.histories.get(url)) return;
+      const filePath = UpdateHistories.resourcesPath + fileName;
       let old: ScrapeData<Episode[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
@@ -76,9 +72,7 @@ export default async function episodeScraperAsync(outputPath?: string) {
         lastUpdated,
       } as ScrapeData<Episode[]>;
       const json = JSON.stringify(result);
-
       fs.writeFileSync(filePath, json, { encoding: "utf-8" });
-      UpdateHistories.histories.set(url, lastUpdated);
     } catch (error) {
       throw error;
     }

@@ -4,6 +4,7 @@ import plates from "../resources/plates.json";
 export interface Skill {
   name: string;
   rank: string;
+  effect: string;
   conditions: string;
 }
 
@@ -287,7 +288,7 @@ export const platePagingState = atom({
   key: "paging",
   default: {
     current: 1,
-    numberOf: 10,
+    numberOf: 20,
   },
 });
 

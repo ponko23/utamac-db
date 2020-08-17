@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
     },
     heading: {
-      fontSize: theme.typography.pxToRem(15),
+      fontSize: theme.typography.pxToRem(13),
       fontWeight: theme.typography.fontWeightRegular,
     },
     details: {},
@@ -163,19 +163,34 @@ export const PlateFilter = (props: PlateFilterProps) => {
     let results: JSX.Element[] = [];
     filter.compatibleDiva.forEach((v, k) => {
       results.push(
-        <ToggleButton
-          key={"diva" + (results.length + 1)}
-          value={v}
-          selected={v}
-          onChange={() =>
-            setFilter((f) => {
-              return { ...f, compatibleDiva: f.compatibleDiva.set(k, !v) };
-            })
-          }
-          style={{ padding: 0, marginLeft: 1 }}
-        >
-          <img src={divaIcons.get(k)} width={30} alt={k} title={k} />
-        </ToggleButton>
+        <>
+          <ToggleButton
+            key={"diva" + (results.length + 1)}
+            value={v}
+            selected={v}
+            onChange={() =>
+              setFilter((f) => {
+                return { ...f, compatibleDiva: f.compatibleDiva.set(k, !v) };
+              })
+            }
+            style={{ padding: 0, marginLeft: 1 }}
+          >
+            <img src={divaIcons.get(k)} width={30} alt={k} title={k} />
+          </ToggleButton>
+          {results.length === 4 && (
+            <>
+              <br />
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  float: "left",
+                  margin: 1,
+                }}
+              ></div>
+            </>
+          )}
+        </>
       );
     });
     return results;
@@ -200,8 +215,8 @@ export const PlateFilter = (props: PlateFilterProps) => {
               <ToggleButton
                 key={"ralityAll"}
                 style={{
-                  paddingLeft: 7,
-                  paddingRight: 7,
+                  paddingLeft: 2,
+                  paddingRight: 2,
                   paddingTop: 0,
                   paddingBottom: 0,
                   margin: 1,
@@ -217,13 +232,13 @@ export const PlateFilter = (props: PlateFilterProps) => {
               </ToggleButton>
               {generateRalityFilter()}
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={8}>
               <Typography variant="subtitle2">属性</Typography>
               <ToggleButton
                 key={"typeAll"}
                 style={{
-                  paddingLeft: 7,
-                  paddingRight: 7,
+                  paddingLeft: 2,
+                  paddingRight: 2,
                   paddingTop: 3,
                   paddingBottom: 3,
                   margin: 1,
@@ -298,11 +313,12 @@ export const PlateFilter = (props: PlateFilterProps) => {
               <ToggleButton
                 key={"divaAll"}
                 style={{
-                  paddingLeft: 7,
-                  paddingRight: 7,
+                  width: 32,
+                  paddingLeft: 3,
+                  paddingRight: 3,
                   paddingTop: 3,
                   paddingBottom: 3,
-                  marginLeft: 1,
+                  marginLeft: 2,
                 }}
                 value={"all"}
                 onChange={() =>

@@ -7,16 +7,18 @@ import UpdateHistories from "./updatehistory";
 async function mainAsync() {
   try {
     const outputPath = "../utamac-db/src/resources/";
-    UpdateHistories.useCache = false; // 上手くいかない
-    UpdateHistories.load(outputPath);
-    await divaScraperAsync(outputPath);
-    await episodeScraperAsync(outputPath);
-    await costumeScraperAsync(outputPath);
-    await plateScraperAsync(outputPath);
-    UpdateHistories.save(outputPath);
+    UpdateHistories.setupResourcesPath(outputPath);
+    UpdateHistories.useCache = true; // 上手くいかない
+    UpdateHistories.load();
+    await divaScraperAsync();
+    await episodeScraperAsync();
+    await costumeScraperAsync();
+    await plateScraperAsync();
   } catch (error) {
     console.log(Object.keys(error), error.message);
     throw error;
+  } finally {
+    UpdateHistories.save();
   }
 }
 

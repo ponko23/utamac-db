@@ -52,8 +52,6 @@ export const PlatePopup = () => {
           <>
             <DialogTitle>
               <Typography>{platePopup.name}</Typography>
-            </DialogTitle>
-            <StyledDialogContent dividers>
               <div style={{ textAlign: "center" }}>
                 <img
                   src={platePopup.image[imageState ? 1 : 0]}
@@ -64,8 +62,10 @@ export const PlatePopup = () => {
                   alt=""
                 />
               </div>
+            </DialogTitle>
+            <StyledDialogContent dividers>
+              <Typography variant="subtitle2">ステータス</Typography>
               <TableContainer component={Paper}>
-                <Typography variant="subtitle2">ステータス</Typography>
                 <Table size="small" aria-label="a dense table">
                   <TableHead>
                     <TableRow>
@@ -127,66 +127,90 @@ export const PlatePopup = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <TableContainer component={Paper}>
-                <Typography variant="subtitle2">センタースキル</Typography>
-                {platePopup.centerSkill[0]?.[0] && (
+              <Typography variant="subtitle2">センタースキル</Typography>
+              {platePopup.centerSkill[0]?.[1] && (
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableBody>
                       <TableRow>
                         <TableCell>
-                          {platePopup.centerSkill[0]?.[0]?.name}{" "}
-                          {platePopup.centerSkill[0]?.[0]?.rank}
+                          {platePopup.centerSkill[0][1].name}{" "}
+                          {platePopup.centerSkill[0][1].rank}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
-                          {platePopup.centerSkill[0]?.[0]?.conditions}
+                          {platePopup.centerSkill[0][1].effect}
+                          {platePopup.centerSkill[0][1].conditions && (
+                            <>
+                              <br />
+                              <span style={{ color: "red" }}>
+                                {platePopup.centerSkill[0][1].conditions}
+                              </span>
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
-                )}
-              </TableContainer>
-              <TableContainer component={Paper}>
-                <Typography variant="subtitle2">アクティブ</Typography>
-                {platePopup.activeSkill[0]?.[0] && (
+                </TableContainer>
+              )}
+              <Typography variant="subtitle2">アクティブ</Typography>
+              {platePopup.activeSkill[0]?.[1] && (
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableBody>
                       <TableRow>
                         <TableCell>
-                          {platePopup.activeSkill[0]?.[0]?.name}{" "}
-                          {platePopup.activeSkill[0]?.[0]?.rank}
+                          {platePopup.activeSkill[0][1].name}{" "}
+                          {platePopup.activeSkill[0][1].rank}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
-                          {platePopup.activeSkill[0]?.[0]?.conditions}
+                          {platePopup.activeSkill[0][1].effect}
+                          {platePopup.activeSkill[0][1].conditions && (
+                            <>
+                              <br />
+                              <span style={{ color: "red" }}>
+                                {platePopup.activeSkill[0][1].conditions}
+                              </span>
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
-                )}
-              </TableContainer>
-              <TableContainer component={Paper}>
-                <Typography variant="subtitle2">ライブ</Typography>
-                {platePopup.liveSkill[0]?.[0] && (
+                </TableContainer>
+              )}
+              <Typography variant="subtitle2">ライブ</Typography>
+              {platePopup.liveSkill[0]?.[1] && (
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableBody>
                       <TableRow>
                         <TableCell>
-                          {platePopup.liveSkill[0]?.[0]?.name}{" "}
-                          {platePopup.liveSkill[0]?.[0]?.rank}
+                          {platePopup.liveSkill[0][1].name}{" "}
+                          {platePopup.liveSkill[0][1].rank}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
-                          {platePopup.liveSkill[0]?.[0]?.conditions}
+                          {platePopup.liveSkill[0][1].effect}
+                          {platePopup.liveSkill[0][1].conditions && (
+                            <>
+                              <br />
+                              <span style={{ color: "red" }}>
+                                {platePopup.liveSkill[0][1].conditions}
+                              </span>
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
-                )}
-              </TableContainer>
+                </TableContainer>
+              )}
             </StyledDialogContent>
             <StyledDialogActions>
               <Button autoFocus onClick={handleClose} color="primary">

@@ -68,14 +68,17 @@ function App() {
       <PersistenceObserver />
       <Container
         maxWidth="xl"
-        style={{ paddingLeft: 2, paddingRight: 2, marginBottom: 2 }}
+        style={{
+          paddingLeft: 2,
+          paddingRight: 2,
+          marginBottom: 2,
+          background: "lightgray",
+        }}
       >
         <PlateFilter />
         <PlatePopup />
         <PlatePagination />
-        <Divider />
         <PlateList />
-        <Divider />
         <PlatePagination />
       </Container>
     </RecoilRoot>

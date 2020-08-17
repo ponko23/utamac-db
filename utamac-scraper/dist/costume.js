@@ -3,24 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.costumeScraperAsync = void 0;
 const scraper_1 = require("./scraper");
-const utility_1 = require("./utility");
+const utility_1 = __importDefault(require("./utility"));
 const updatehistory_1 = __importDefault(require("./updatehistory"));
 const cheerio_1 = __importDefault(require("cheerio"));
 const fs_1 = __importDefault(require("fs"));
 const request_promise_1 = __importDefault(require("request-promise"));
 const url = "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e8%a1%a3%e8%a3%85";
 const fileName = "costumes.json";
-async function costumeScraperAsync(outputPath) {
+async function costumeScraperAsync() {
     return await updatehistory_1.default.usingHistory(url, async ($, lastUpdated) => {
         try {
-            const filePath = outputPath + fileName;
-            const html = await request_promise_1.default(url);
-            const $ = cheerio_1.default.load(html);
-            const lastUpdated = $(".last-updated time").first().text();
-            if (lastUpdated === updatehistory_1.default.histories.get(url))
-                return;
+            const filePath = updatehistory_1.default.resourcesPath + fileName;
             let old;
             if (fs_1.default.existsSync(filePath)) {
                 const oldJson = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
@@ -85,16 +79,15 @@ async function costumeScraperAsync(outputPath) {
             };
             const json = JSON.stringify(result);
             fs_1.default.writeFileSync(filePath, json, { encoding: "utf-8" });
-            updatehistory_1.default.histories.set(url, lastUpdated);
         }
         catch (error) {
-            updatehistory_1.default.histories.set(url, error.message);
+            throw error;
         }
     });
 }
-exports.costumeScraperAsync = costumeScraperAsync;
+exports.default = costumeScraperAsync;
 async function scrapeItemAsync(uri) {
-    const itemUrl = utility_1.generateUrl(scraper_1.baseUrl, uri);
+    const itemUrl = utility_1.default.generateUrl(scraper_1.baseUrl, uri);
     try {
         const html = await request_promise_1.default(itemUrl);
         const $ = cheerio_1.default.load(html);
