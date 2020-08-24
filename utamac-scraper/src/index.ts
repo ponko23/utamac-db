@@ -14,6 +14,10 @@ async function mainAsync() {
     await episodeScraperAsync();
     await costumeScraperAsync();
     await plateScraperAsync();
+
+    // 取得したjsonを加工してスリムにする
+
+    // 追加のデータをマージする
   } catch (error) {
     console.log(Object.keys(error), error.message);
     throw error;
