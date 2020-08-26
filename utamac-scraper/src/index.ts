@@ -10,10 +10,10 @@ async function mainAsync() {
     UpdateHistories.setupResourcesPath(outputPath);
     UpdateHistories.useCache = false; // 上手くいかない
     UpdateHistories.load();
-    await divaScraperAsync();
-    await episodeScraperAsync();
-    await costumeScraperAsync();
-    await plateScraperAsync();
+    const divas = await divaScraperAsync();
+    const episodes = await episodeScraperAsync();
+    const costumes = await costumeScraperAsync();
+    const plates = await plateScraperAsync();
 
     // 取得したjsonを加工してスリムにする
 

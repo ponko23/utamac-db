@@ -24,7 +24,7 @@ export interface Costume {
 export default async function costumeScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = UpdateHistories.resourcesPath + fileName;
+      const filePath = UpdateHistories.getResourcePath(fileName);
       let old: ScrapeData<Costume[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
@@ -93,6 +93,7 @@ export default async function costumeScraperAsync() {
       } as ScrapeData<Costume[]>;
       const json = JSON.stringify(result);
       fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+      return costumes;
     } catch (error) {
       throw error;
     }

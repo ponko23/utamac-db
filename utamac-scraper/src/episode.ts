@@ -21,7 +21,7 @@ export interface Episode {
 export default async function episodeScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = UpdateHistories.resourcesPath + fileName;
+      const filePath = UpdateHistories.getResourcePath(fileName);
       let old: ScrapeData<Episode[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
@@ -73,6 +73,7 @@ export default async function episodeScraperAsync() {
       } as ScrapeData<Episode[]>;
       const json = JSON.stringify(result);
       fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+      return episodes;
     } catch (error) {
       throw error;
     }

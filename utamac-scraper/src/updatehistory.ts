@@ -41,6 +41,7 @@ class UpdateHistories {
     fs.writeFileSync(filePath, json, { encoding: "utf-8" });
   };
 
+  public getResourcePath = (fileName: string) => this.resourcesPath + fileName;
   public async usingHistory<T>(
     url: string,
     func: ($: CheerioStatic, lastUpdated: string) => Promise<T>

@@ -89,7 +89,7 @@ export interface Plate {
 export default async function plateScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = UpdateHistories.resourcesPath + fileName;
+      const filePath = UpdateHistories.getResourcePath(fileName);
       let old: ScrapeData<Plate[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
@@ -187,6 +187,7 @@ export default async function plateScraperAsync() {
         lastUpdated,
       } as ScrapeData<Plate[]>;
       fs.writeFileSync(filePath, JSON.stringify(result), { encoding: "utf-8" });
+      return data;
     } catch (error) {
       throw error;
     }

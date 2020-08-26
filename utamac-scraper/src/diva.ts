@@ -16,6 +16,7 @@ export interface Diva {
   name: string;
   series: string;
   image: string;
+  color: string;
   initialTotal: number;
   initialSoul: number;
   initialVoice: number;
@@ -36,7 +37,7 @@ export interface Diva {
 export default async function divaScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
-      const filePath = UpdateHistories.resourcesPath + fileName;
+      const filePath = UpdateHistories.getResourcePath(fileName);
       let old: ScrapeData<Diva[]>;
       if (fs.existsSync(filePath)) {
         const oldJson = fs.readFileSync(filePath, { encoding: "utf-8" });
@@ -75,6 +76,7 @@ export default async function divaScraperAsync() {
       } as ScrapeData<Diva[]>;
       const json = JSON.stringify(result);
       fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+      return divas;
     } catch (error) {
       throw error;
     }
@@ -99,11 +101,25 @@ const divaSeriesMap = new Map([
   ],
 ]);
 
+const colors = new Map([
+  ["フレイア・ヴィオン", "#fb5a74"],
+  ["美雲・ギンヌメール", "#cd7dfa"],
+  ["カナメ・バッカニア", "#ffec6e"],
+  ["マキナ・中島", "#ff6ec3"],
+  ["レイナ・プラウラー", "#46f5aa"],
+  ["ランカ・リー", "#46f5aa"],
+  ["シェリル・ノーム", "#cd7dfa"],
+  ["ミレーヌ・ジーナス", "#ff6ec3"],
+  ["熱気バサラ", "#ff4a4a"],
+  ["リン・ミンメイ", "#4eacfa"],
+]);
+
 async function scrapeItemAsync(uri: string) {
   try {
     const html = await rp(baseUrl + uri);
     const $ = cheerio.load(html);
     const name = $(".page h1").text();
+    const color = colors.get(name);
     const image = $(".page img").first().attr("src");
     const series = divaSeriesMap.get($(".page img").last().attr("src"));
     const initialRows = $(".page table>tbody>tr>td:contains(初期)");
@@ -141,6 +157,7 @@ async function scrapeItemAsync(uri: string) {
       name,
       series,
       image,
+      color,
       initialTotal,
       initialSoul,
       initialVoice,
