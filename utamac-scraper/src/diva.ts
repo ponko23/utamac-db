@@ -62,7 +62,7 @@ export default async function divaScraperAsync() {
         divas = [];
       }
       for (let i = 0; i < links.length; i++) {
-        if (divas.findIndex((v) => v.uri === links[i]) > 0) continue;
+        if (divas.findIndex((v) => v.uri === links[i]) >= 0) continue;
         const item = await scrapeItemAsync(links[i]);
         if (item === null) continue;
         item.icon = icons[i];

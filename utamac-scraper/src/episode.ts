@@ -49,7 +49,7 @@ export default async function episodeScraperAsync() {
       const rows = $(".page .table_styleG>table>tbody>tr").slice(1).toArray();
       for (let i = 0; i < rows.length; i++) {
         const name = $(rows[i]).find("td").first().next().find("a").text();
-        if (episodes.findIndex((v) => v.name === name) > 0) continue;
+        if (episodes.findIndex((v) => v.name === name) >= 0) continue;
         const link = $(rows[i]).find("td").first().find("a");
         const uri = link.attr("href");
         const icon = link.find("img").attr("src");

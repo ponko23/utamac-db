@@ -46,7 +46,7 @@ export default async function costumeScraperAsync() {
         costumes = [];
       }
       for (let link of links) {
-        if (costumes.findIndex((v) => v.uri === link) > 0) continue;
+        if (costumes.findIndex((v) => v.uri === link) >= 0) continue;
         const item = await scrapeItemAsync(link);
         costumes.push(item);
       }
