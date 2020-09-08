@@ -10,6 +10,7 @@ module.exports = {
       github: 'https://github.com/ponko23',
     },
   },
+  pathPrefix: `/game-db`,
   plugins: [
     `gatsby-plugin-typescript`,
     `gatsby-plugin-react-helmet`,
