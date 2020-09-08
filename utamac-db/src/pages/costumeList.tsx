@@ -7,6 +7,7 @@ import {
   Card,
   CardHeader,
   CardMedia,
+  CardContent,
 } from '@material-ui/core'
 
 import costumesJson from '../data/costumes.json'
@@ -68,6 +69,7 @@ const CostumeListPage: FC = () => {
                   image={c.image}
                   style={{ height: 256, width: 256 }}
                 />
+                <CardContent>{c.effect}</CardContent>
               </Card>
             </Grid>
           )
