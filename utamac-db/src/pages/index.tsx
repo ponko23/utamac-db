@@ -3,9 +3,6 @@ import { Link as GatsbyLink } from 'gatsby'
 import { Grid, Button, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 
-import SEO from '../components/seo'
-import Hero from '../components/hero'
-
 const useStyles = makeStyles((theme: Theme) => ({
   heroButtons: {
     marginTop: theme.spacing(4),
@@ -21,7 +18,7 @@ const IndexPage: FC = () => {
           <Grid item>
             <Button
               component={GatsbyLink}
-              to="/plateList/"
+              to="./plateList/"
               variant="contained"
               color="primary"
             >
@@ -29,7 +26,7 @@ const IndexPage: FC = () => {
             </Button>
             <Button
               component={GatsbyLink}
-              to="/costumeList/"
+              to="./costumeList/"
               variant="contained"
               color="primary"
             >
