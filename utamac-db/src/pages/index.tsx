@@ -18,7 +18,7 @@ const IndexPage: FC = () => {
           <Grid item>
             <Button
               component={GatsbyLink}
-              to="./plateList/"
+              to="/plateList/"
               variant="contained"
               color="primary"
             >
@@ -26,7 +26,7 @@ const IndexPage: FC = () => {
             </Button>
             <Button
               component={GatsbyLink}
-              to="./costumeList/"
+              to="/costumeList/"
               variant="contained"
               color="primary"
             >

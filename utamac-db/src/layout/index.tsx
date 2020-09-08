@@ -57,11 +57,11 @@ const LayoutComponent: FC = ({ children }) => {
         <BottomNavigationAction
           label="Plate"
           icon={<ListOutlined />}
-          value="./plateList"
+          value="/plateList"
         />
         <BottomNavigationAction
           label="Costume"
-          value="./costumeList"
+          value="/costumeList"
           icon={<ListOutlined />}
         />
         <BottomNavigationAction label="Live" icon={<ListOutlined />} />
