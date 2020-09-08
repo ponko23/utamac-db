@@ -7,7 +7,7 @@ module.exports = {
       content: '',
     },
     social: {
-      github: 'https://github.com/ponko23',
+      github: 'https://github.com/ponko23/game-db',
     },
   },
   plugins: [
