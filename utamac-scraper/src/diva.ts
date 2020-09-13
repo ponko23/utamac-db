@@ -3,6 +3,7 @@ import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
 import rp from "request-promise";
+import utility from "./utility";
 
 const url =
   "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e6%ad%8c%e5%a7%ab_%e6%ad%8c%e5%a7%ab";
@@ -68,6 +69,7 @@ export default async function divaScraperAsync() {
         item.icon = icons[i];
         item.id = ("0" + (i + 1)).slice(-2);
         divas.push(item);
+        utility.sleep();
       }
       const result = {
         url,

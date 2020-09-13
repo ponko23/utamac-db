@@ -6,11 +6,11 @@ import fs from "fs";
 import rp from "request-promise";
 import _ from "lodash";
 
-// 一応全プレートの一覧だが、こっちは使えないので
+// 全プレート一覧のURL
 const url =
   "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e3%83%97%e3%83%ac%e3%83%bc%e3%83%88";
 
-// 属性別、シリーズ別に取ってから振り分けする
+// 属性別一覧のURL
 const attributeUrl = [
   [
     "star",
@@ -26,6 +26,7 @@ const attributeUrl = [
   ],
 ];
 
+// シリーズ別一覧のURL
 const seriesUrl = [
   [
     "超時空要塞マクロス",
@@ -86,6 +87,10 @@ export interface Plate {
   lastUpdated: string;
 }
 
+/**
+ * プレート情報が更新されていれば取得する
+ * ただし、全プレート一覧ページは重たいのでタイムアウトする事があるのでそこをどうにかしないといけない
+ */
 export default async function plateScraperAsync() {
   return await UpdateHistories.usingHistory(url, async ($, lastUpdated) => {
     try {
@@ -106,7 +111,7 @@ export default async function plateScraperAsync() {
         plates = new Map<string, Plate>();
       }
 
-      // 全プレート一覧の並び順を確認する為に取得しておく
+      // 全プレート一覧の並び順を確認しつつデータを取得する
       const allPlateUri = $(".page table>tbody>tr>td:last-child>a")
         .toArray()
         .map((m) => $(m).attr("href"));
@@ -115,9 +120,10 @@ export default async function plateScraperAsync() {
         const plate = await scrapeItemAsync(uri);
         plates.set(plate.uri, plate);
         console.log("[" + plates.size + "/" + allPlateUri.length + "]");
+        utility.sleep();
       }
 
-      // 属性順に取得する
+      // 属性別ページを取得して引き当てる（プレート詳細ページには属性情報がない）
       for (let i = 0; i < attributeUrl.length; i++) {
         const attributesList = await getPlateUriByCategoryAsync(
           attributeUrl[i][1]
@@ -127,9 +133,10 @@ export default async function plateScraperAsync() {
           if (!plates.has(uri)) continue;
           plates.set(uri, { ...plates.get(uri), attribute });
         }
+        utility.sleep();
       }
 
-      // シリーズ一覧も取得して引き当てる
+      // シリーズ一覧も取得して引き当てる（プレート詳細ページにはシリーズ情報もない）
       for (let i = 0; i < seriesUrl.length; i++) {
         const seriesList = await getPlateUriByCategoryAsync(seriesUrl[i][1]);
         const series = seriesUrl[i][0];
@@ -137,6 +144,7 @@ export default async function plateScraperAsync() {
           if (!plates.has(uri)) continue;
           plates.set(uri, { ...plates.get(uri), series });
         }
+        utility.sleep();
       }
 
       let data = Array.from(plates.values());
@@ -144,7 +152,6 @@ export default async function plateScraperAsync() {
       // 条件2:追加日（更新日）順
       // 条件3:一覧の並び順
       data = data.sort((a, b) => {
-        console.log(a.rality + " vs " + b.rality);
         if (a.rality[0] > b.rality[0]) return -1;
         if (a.rality[0] < b.rality[0]) return 1;
         if (a.rality.length === 1) {
@@ -158,7 +165,8 @@ export default async function plateScraperAsync() {
           return a.rality[1] > b.rality[1] ? -1 : 1;
         }
       });
-
+      // IDを振る為のカウンター
+      // IDはレアリティ2桁、一覧での並び順にレアリティ別4桁
       let counter = new Map<number, number>([
         [6, 0],
         [5, 0],
@@ -194,6 +202,10 @@ export default async function plateScraperAsync() {
   });
 }
 
+/**
+ *  属性別の一覧ページから、プレート詳細ページのURLを取得する
+ * @param url 属性別一覧ページのURL
+ */
 async function getPlateUriByCategoryAsync(url: string) {
   try {
     const html = await rp(url);
@@ -206,6 +218,10 @@ async function getPlateUriByCategoryAsync(url: string) {
   }
 }
 
+/**
+ * プレート詳細ページからデータを取得する
+ * @param uri 詳細ページのURI（一覧ページは相対パス）
+ */
 async function scrapeItemAsync(uri: string) {
   const itemUrl = utility.generateUrl(baseUrl, uri);
   return await UpdateHistories.usingHistory(itemUrl, async ($, lastUpdated) => {
@@ -274,6 +290,12 @@ async function scrapeItemAsync(uri: string) {
   });
 }
 
+/**
+ * プレート詳細ページにて、各スキルのテーブルからデータを取得する
+ * @param $ Cheerio
+ * @param page プレート詳細ページのCherrioインスタンス
+ * @param skillType 取得するスキル種別（センター、アクティブ、ライブ）
+ */
 function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
   try {
     const skillRows = page
@@ -311,6 +333,11 @@ function getSkill($: CheerioStatic, page: Cheerio, skillType: string) {
   }
 }
 
+/**
+ * プレート詳細ページにて、ステータスのテーブルからデータを取得する
+ * @param $ Cheerio
+ * @param page プレート詳細ページのCherrioインスタンス
+ */
 function getStatus($: CheerioStatic, page: Cheerio) {
   try {
     const rows = page

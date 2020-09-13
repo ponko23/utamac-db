@@ -27,6 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
     marginBottom: 56,
   },
+  bottom: {
+    height: 56,
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
 }))
 
 const LayoutComponent: FC = ({ children }) => {
@@ -46,18 +53,12 @@ const LayoutComponent: FC = ({ children }) => {
           navigateTo(newValue)
         }}
         showLabels
-        style={{
-          height: 56,
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-        }}
+        className={classes.bottom}
       >
         <BottomNavigationAction
           label="Plate"
-          icon={<ListOutlined />}
           value="/plateList"
+          icon={<ListOutlined color="inherit" />}
         />
         <BottomNavigationAction
           label="Costume"

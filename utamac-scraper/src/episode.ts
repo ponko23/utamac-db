@@ -3,6 +3,7 @@ import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
 import rp from "request-promise";
+import utility from "./utility";
 
 const url =
   "https://xn--pckua3ipc5705b.gamematome.jp/game/977/wiki/%e3%82%a8%e3%83%94%e3%82%bd%e3%83%bc%e3%83%89";
@@ -57,6 +58,7 @@ export default async function episodeScraperAsync() {
         episode.name = name;
         episode.icon = icon;
         episodes.push(episode);
+        utility.sleep();
       }
       episodes = episodes.sort((a, b) =>
         new Date(a.lastUpdated) < new Date(b.lastUpdated) ? -1 : 1

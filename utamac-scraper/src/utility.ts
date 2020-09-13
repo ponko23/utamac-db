@@ -64,8 +64,17 @@ function transpose<T>(source: T[][]): T[][] {
   }
 }
 
+/**
+ * 指定ミリ秒スリープする
+ * @param msec 指定ミリ秒（デフォルト1000）
+ */
+function sleep(msec?: number) {
+  setTimeout((_) => {}, msec ?? 1000);
+}
+
 export default {
   transpose,
   getLastUri,
   generateUrl,
+  sleep,
 };

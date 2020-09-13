@@ -49,6 +49,7 @@ export default async function costumeScraperAsync() {
         if (costumes.findIndex((v) => v.uri === link) >= 0) continue;
         const item = await scrapeItemAsync(link);
         costumes.push(item);
+        utility.sleep();
       }
       // 固定のリスト（歌姫リスト）を先に作ってからidはそっちで決定したい
       const divas = Array.from(new Set(costumes.map((m) => m.diva)));
