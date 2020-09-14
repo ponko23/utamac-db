@@ -6,7 +6,7 @@ import UpdateHistories from "./updatehistory";
 
 async function mainAsync() {
   try {
-    const outputPath = "utamac-web/src/data/";
+    const outputPath = "../utamac-web/src/data/";
     UpdateHistories.setupResourcesPath(outputPath);
     UpdateHistories.useCache = false; // 上手くいかない
     UpdateHistories.load();
