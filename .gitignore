@@ -15,7 +15,6 @@ utamac-web/src/data/caches/
 utamac-web/public/
 utamac-web/.cache/
 utamac-scraper/dist/
-.vscode/
 
 # misc
 .DS_Store

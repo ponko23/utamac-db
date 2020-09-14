@@ -1,5 +1,4 @@
 import fs from "fs";
-import rp from "request-promise";
 import cheerio from "cheerio";
 import utility from "./utility";
 
@@ -58,7 +57,7 @@ class UpdateHistories {
         }
       }
       if (html === "") {
-        html = await rp(url);
+        html = await utility.getHtml(url);
       }
       const $ = cheerio.load(html);
       const lastUpdated = $(".page .last-updated time").text();

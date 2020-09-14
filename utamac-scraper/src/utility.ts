@@ -1,6 +1,4 @@
-import fs from "fs";
-import rp from "request-promise";
-import cheerio from "cheerio";
+global.fetch = require('node-fetch').default;
 
 /**
  * URLを安全に連結する。オブジェクトが渡されるとquery parameterとして組み立てて連結する
@@ -72,9 +70,20 @@ function sleep(msec?: number) {
   setTimeout((_) => {}, msec ?? 1000);
 }
 
+/**
+ * htmlテキストを取得する
+ * fetch apiをnode上で動かす為にラップしておく
+ * @param url 取得するhtmlのURL
+ */
+async function getHtml(url: string) {
+  const res = await fetch(url);
+  return await res.text();
+}
+
 export default {
   transpose,
   getLastUri,
   generateUrl,
   sleep,
+  getHtml,
 };

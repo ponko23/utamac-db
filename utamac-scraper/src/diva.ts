@@ -2,7 +2,6 @@ import { ScrapeData, baseUrl } from "./scraper";
 import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
-import rp from "request-promise";
 import utility from "./utility";
 
 const url =
@@ -118,7 +117,7 @@ const colors = new Map([
 
 async function scrapeItemAsync(uri: string) {
   try {
-    const html = await rp(baseUrl + uri);
+    const html = await utility.getHtml(url);
     const $ = cheerio.load(html);
     const name = $(".page h1").text();
     const color = colors.get(name);

@@ -2,7 +2,6 @@ import { ScrapeData, baseUrl } from "./scraper";
 import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
-import rp from "request-promise";
 import utility from "./utility";
 
 const url =
@@ -84,7 +83,7 @@ export default async function episodeScraperAsync() {
 
 async function scrapeItemAsync(uri: string) {
   try {
-    const html = await rp(baseUrl + uri);
+    const html = await utility.getHtml(url);
     const $ = cheerio.load(html);
     const image = $(".page img").first().attr("src");
     const lastUpdated = $(".page .last-updated time").text();

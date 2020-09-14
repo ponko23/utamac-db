@@ -3,7 +3,6 @@ import utility from "./utility";
 import UpdateHistories from "./updatehistory";
 import cheerio from "cheerio";
 import fs from "fs";
-import rp from "request-promise";
 import _ from "lodash";
 
 // 全プレート一覧のURL
@@ -208,7 +207,7 @@ export default async function plateScraperAsync() {
  */
 async function getPlateUriByCategoryAsync(url: string) {
   try {
-    const html = await rp(url);
+    const html = await utility.getHtml(url);
     const $ = cheerio.load(html);
     return $(".page table>tbody>tr>td:last-child>a")
       .toArray()
