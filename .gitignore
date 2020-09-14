@@ -11,9 +11,9 @@ build/
 
 # production
 dist/
-utamac-db/src/data/caches/
-utamac-db/public/
-utamac-db/.cache/
+utamac-web/src/data/caches/
+utamac-web/public/
+utamac-web/.cache/
 utamac-scraper/dist/
 .vscode/
 

@@ -1,8 +1,8 @@
 {
-  "name": "utamac-db",
+  "name": "utamac-web",
   "version": "0.1.0",
   "author": "ponko23",
-  "homepage": "https://ponko23.github.io/game-db/",
+  "homepage": "https://ponko23.github.io/utamac-db/",
   "keywords": [
     "gatsby",
     "typescript",
@@ -67,6 +67,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ponko23/game-db"
+    "url": "https://github.com/ponko23/utamac-db"
   }
 }

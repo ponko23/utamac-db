@@ -33,14 +33,14 @@ jobs:
 
       - name: Dependencies
         run: yarn
-        working-directory: ./utamac-db
+        working-directory: ./utamac-web
 
       - name: Build
         run: yarn build
-        working-directory: ./utamac-db
+        working-directory: ./utamac-web
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./utamac-db/public
+          publish_dir: ./utamac-web/public
