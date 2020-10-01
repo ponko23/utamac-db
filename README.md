@@ -1,11 +1,13 @@
 # 歌マクロスデータベース
 歌マクロス公式wikiが重たいので自分が使う用にreactの勉強がてら構築した
+
 ソースを更新してpushするとgithub actionsでgithub pagesに自動デプロイする
 
 ---
 
 ## 1. utamac-scraper
 歌マクロス公式wikiから更新データを取得するツール
+
 取得したデータはutamac-web/src/dataにjson形式で保存している
 ### 実装済み
 * プレート
@@ -27,6 +29,7 @@
 
 ## 2. utamac-web
 歌マクロスの各種データを閲覧するWebサイト
+
 [歌マクロスDB](https://ponko23.github.io/utamac-db/)
 ### 実装済み
 * プレート一覧（属性、スキル、歌姫相性でフィルタリング、各種ステータス値でソート可能）
