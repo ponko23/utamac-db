@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
 }))
-let divaIcons: DivaIcon[] = []
+const divaIcons: DivaIcon[] = []
 divasJson.data.forEach(d =>
   divaIcons.push({
     id: d.id,

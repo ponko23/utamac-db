@@ -365,7 +365,7 @@ const PlateCard: React.FC<PlateCardProps> = ({
               background: 'rgba(100,100,100,0.5)',
             }}
           >
-            {column}:{_.last(plate.status)![column]}
+            {column}:{_.last(plate.status)?.[column]}
           </Typography>
         )}
       </div>
@@ -840,7 +840,7 @@ const PlateListPage: React.FC = () => {
     filteredPlateList,
     o => {
       if (sortColumn === 'rality') return o.rality
-      return _.last(o.status)![sortColumn]
+      return _.last(o.status)?.[sortColumn]
     },
     sortDirection,
   )

@@ -4,13 +4,11 @@ import {
   Theme,
   BottomNavigation,
   BottomNavigationAction,
-  Hidden,
 } from '@material-ui/core'
 import { ListOutlined } from '@material-ui/icons'
 import { useSelector } from 'react-redux'
 
 import Header from './header'
-import Footer from './footer'
 import themes from '../theme'
 import useSiteMetadata from '../hooks/useSiteMetadata'
 import { RootState } from '../redux/store'

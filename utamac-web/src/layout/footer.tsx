@@ -1,15 +1,7 @@
 import React, { FC } from 'react'
 
 import { makeStyles } from '@material-ui/styles'
-import {
-  Container,
-  Typography,
-  Theme,
-  Link,
-  BottomNavigation,
-  BottomNavigationAction,
-} from '@material-ui/core'
-import { ListAltOutlined } from '@material-ui/icons'
+import { Container, Theme, Link } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   footer: {
