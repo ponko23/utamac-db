@@ -66,8 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.grey.A100,
   },
   formControl: {
-    margin: theme.spacing(0),
-    minWidth: 200,
+    margin: theme.spacing(1),
   },
   heading: {
     fontSize: theme.typography.pxToRem(12),
