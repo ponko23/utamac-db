@@ -103,7 +103,7 @@ export default async function costumeScraperAsync() {
 async function scrapeItemAsync(uri: string) {
   const itemUrl = utility.generateUrl(baseUrl, uri);
   try {
-    const html = await utility.getHtml(url);
+    const html = await utility.getHtml(itemUrl);
     const $ = cheerio.load(html);
     const lastUpdated = $(".page .last-updated time").text();
     if (lastUpdated === UpdateHistories.histories.get(url)) return;
