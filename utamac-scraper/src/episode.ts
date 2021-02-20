@@ -57,6 +57,7 @@ export default async function episodeScraperAsync() {
         episode.name = name;
         episode.icon = icon;
         episodes.push(episode);
+        console.log("new episode: [" + episodes.length + "/" + rows.length + "]");
         utility.sleep();
       }
       episodes = episodes.sort((a, b) =>

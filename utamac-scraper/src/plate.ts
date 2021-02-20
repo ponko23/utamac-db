@@ -118,7 +118,7 @@ export default async function plateScraperAsync() {
         if (plates.has(uri)) continue;
         const plate = await scrapeItemAsync(uri);
         plates.set(plate.uri, plate);
-        console.log("[" + plates.size + "/" + allPlateUri.length + "]");
+        console.log("new plate: [" + plates.size + "/" + allPlateUri.length + "]");
         utility.sleep();
       }
 
